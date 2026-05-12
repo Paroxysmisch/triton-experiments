@@ -145,10 +145,10 @@ def softmax(x):
     num_programs = min(num_programs, n_rows)
 
     # Create a number of persistent programs.
-    compiled_kernel = kernel[(num_programs, 1, 1)](
+    kernel[(num_programs, 1, 1)](
         y, x, x.stride(0), y.stride(0), n_rows, n_cols, BLOCK_SIZE, num_stages
     )
-    print(compiled_kernel.asm["ttir"])
+    print(kernel.asm["ttir"])
     return y
 
 
