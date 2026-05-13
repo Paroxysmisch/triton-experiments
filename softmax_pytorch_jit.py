@@ -1,4 +1,5 @@
 import torch
+import triton
 
 from softmax import naive_softmax
 
