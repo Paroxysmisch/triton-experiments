@@ -9,4 +9,5 @@ dependencies = [
     "torchvision",
     "triton",
     "ruff",
+    "z3-solver==4.13.3.0",
 ]
