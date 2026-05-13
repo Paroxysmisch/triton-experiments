@@ -8,10 +8,12 @@ import glob
 import time
 from unittest.mock import patch
 
+
 def get_ttir(file_path, function_name, construct_script):
     # 1. Identify Inductor's Cache Dir
     # Inductor uses /tmp/torchinductor_<user> by default
     import getpass
+
     user = getpass.getuser()
     base_cache = f"/tmp/torchinductor_{user}"
 
@@ -25,7 +27,7 @@ def get_ttir(file_path, function_name, construct_script):
     try:
         DEVICE = triton.runtime.driver.active.get_active_torch_device()
     except Exception:
-        DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+        DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
     # 2. Import user function
     module_name = os.path.splitext(os.path.basename(file_path))[0]
@@ -36,10 +38,11 @@ def get_ttir(file_path, function_name, construct_script):
     target_fn = getattr(module, function_name)
 
     # 3. Prepare inputs
-    env = {'torch': torch, 'triton': triton, 'DEVICE': DEVICE}
+    env = {"torch": torch, "triton": triton, "DEVICE": DEVICE}
     exec(construct_script, env)
-    inputs = env.get('args')
-    if not isinstance(inputs, (tuple, list)): inputs = (inputs,)
+    inputs = env.get("args")
+    if not isinstance(inputs, (tuple, list)):
+        inputs = (inputs,)
 
     # 4. Trigger Compilation
     print(f"--- Compiling {function_name} ---", file=sys.stderr)
@@ -63,14 +66,18 @@ def get_ttir(file_path, function_name, construct_script):
 
     # Just to be safe, check it was created after we started the script
     if os.path.getmtime(newest_file) < (start_time - 1):
-        print("Error: The found .ttir file is old. Compilation might have failed.", file=sys.stderr)
+        print(
+            "Error: The found .ttir file is old. Compilation might have failed.",
+            file=sys.stderr,
+        )
         return
 
     # 7. Final Output
     print(f"--- Found TTIR: {newest_file} ---", file=sys.stderr)
-    with open(newest_file, 'r') as f:
+    with open(newest_file, "r") as f:
         # Send only the IR to STDOUT
         print(f.read())
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
