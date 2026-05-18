@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/matmul_dequantize_perf.py", line 7, in <module>
+    from matmul_dequantize import matmul_dequantize_int4_gptq
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/matmul_dequantize.py", line 357, in <module>
+    result_gold = test_multiple_matmul()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/matmul_dequantize.py", line 345, in test_multiple_matmul
+    output_2 = matmul_dequantize_int4_s2(x, qweight, scales, qzeros, group_size_2)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/matmul_dequantize.py", line 229, in matmul_dequantize_int4_s2
+    matmul_kernel[grid](
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/autotuner.py", line 171, in run
+    ret = self.fn.run(
+          ^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 691, in run
+    kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+    ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 381, in __getattribute__
+    self._init_handles()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 374, in _init_handles
+    raise OutOfResources(self.metadata.shared, max_shared, "shared memory")
+triton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 152064, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.

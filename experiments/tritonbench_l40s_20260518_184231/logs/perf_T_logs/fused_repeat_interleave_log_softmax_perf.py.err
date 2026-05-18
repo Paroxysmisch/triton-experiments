@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/fused_repeat_interleave_log_softmax_perf.py", line 8, in <module>
+    from fused_repeat_interleave_log_softmax import fused_repeat_interleave_log_softmax
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/fused_repeat_interleave_log_softmax.py", line 53, in <module>
+    test_results = test_fused_repeat_interleave_log_softmax()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/fused_repeat_interleave_log_softmax.py", line 28, in test_fused_repeat_interleave_log_softmax
+    input1 = torch.tensor([1.0, 2.0, 3.0], device='cuda')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

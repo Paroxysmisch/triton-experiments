@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/kv_cache_filling_perf.py", line 7, in <module>
+    from kv_cache_filling import fill_kv_cache
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/kv_cache_filling.py", line 491, in <module>
+    result_gold = test_fill_kv_cache()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/kv_cache_filling.py", line 440, in test_fill_kv_cache
+    fill_kv_cache(
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/kv_cache_filling.py", line 326, in fill_kv_cache
+    _fill_kv_cache_kernel[grid](
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 607, in run
+    device = driver.active.get_current_device()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 23, in __getattr__
+    self._initialize_obj()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
+    self._obj = self._init_fn()
+                ^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/driver.py", line 8, in _create_driver
+    raise RuntimeError(f"{len(actives)} active drivers ({actives}). There should only be one.")
+RuntimeError: 0 active drivers ([]). There should only be one.

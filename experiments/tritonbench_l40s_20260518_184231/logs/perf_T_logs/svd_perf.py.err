@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/svd_perf.py", line 8, in <module>
+    from svd import svd
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/svd.py", line 50, in <module>
+    test_results = test_svd()
+                   ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/svd.py", line 29, in test_svd
+    A1 = torch.tensor([[3.0, 1.0], [1.0, 3.0]], device='cuda')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

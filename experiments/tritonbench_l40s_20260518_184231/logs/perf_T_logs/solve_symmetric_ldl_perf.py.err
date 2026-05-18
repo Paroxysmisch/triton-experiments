@@ -1,0 +1,2 @@
+/home/mb2412/TritonBench/data/TritonBench_T_v1/solve_symmetric_ldl.py:5: UserWarning: Casting complex values to real discards the imaginary part (Triggered internally at ../aten/src/ATen/native/Copy.cpp:308.)
+  A = A.to(torch.float32)  # Use float32 to ensure consistency

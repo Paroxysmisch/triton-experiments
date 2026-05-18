@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/ones_like_perf.py", line 8, in <module>
+    from ones_like import ones_like
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/ones_like.py", line 47, in <module>
+    test_results = test_ones_like()
+                   ^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/ones_like.py", line 30, in test_ones_like
+    input_tensor = torch.randn(2, 3, device='cuda')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

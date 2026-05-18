@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/leaky_relu_conv2d_perf.py", line 8, in <module>
+    from leaky_relu_conv2d import leaky_relu_conv2d
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/leaky_relu_conv2d.py", line 69, in <module>
+    test_results = test_leaky_relu_conv2d()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/leaky_relu_conv2d.py", line 44, in test_leaky_relu_conv2d
+    input = torch.randn(1, 3, 32, 32, device='cuda')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

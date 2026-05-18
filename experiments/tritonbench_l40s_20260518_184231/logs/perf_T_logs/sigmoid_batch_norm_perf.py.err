@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/sigmoid_batch_norm_perf.py", line 8, in <module>
+    from sigmoid_batch_norm import sigmoid_batch_norm
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/sigmoid_batch_norm.py", line 53, in <module>
+    test_results = test_sigmoid_batch_norm()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/sigmoid_batch_norm.py", line 35, in test_sigmoid_batch_norm
+    input_tensor = torch.randn(10, 5, device='cuda')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

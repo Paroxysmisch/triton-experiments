@@ -1,0 +1,330 @@
+================================================================================================================================================================
+金标好啊好11111: 33.1571 < 72.0399
+bmm_chunk_fwd.json: 0.4642
+bmm_chunk_fwd.json: 33.1571
+
+生成棒棒棒！！！: 0.3388 > 0.213
+fused_recurrent_retention.json: 1.6245
+fused_recurrent_retention.json: 0.3388
+
+金标好啊好11111: 49.8446 < 83.8625
+flash_decode2_llama.json: 1.0009
+flash_decode2_llama.json: 49.8446
+
+金标好啊好11111: 27.7379 < 33.002
+rope_embedding.json: 0.25
+rope_embedding.json: 27.7379
+
+金标好啊好11111: 31.3764 < 84.5475
+sin_kernel.json: 0.3987
+sin_kernel.json: 31.3764
+
+金标好啊好11111: 16.1463 < 41.4818
+layer_norm_fwd.json: 0.4021
+layer_norm_fwd.json: 16.1463
+
+生成棒棒棒！！！: 22.0346 > 17.2102
+attention_score.json: 0.97
+attention_score.json: 22.0346
+
+生成棒棒棒！！！: 70.0309 > 46.7784
+apply_penalty.json: 1.207
+apply_penalty.json: 70.0309
+
+金标好啊好11111: 9.4165 < 24.2234
+chunked_cumsum_fwd.json: 0.2167
+chunked_cumsum_fwd.json: 9.4165
+
+生成棒棒棒！！！: 0.3374 > 0.2246
+diag_ssm_triton.json: 0.9519
+diag_ssm_triton.json: 0.3374
+
+生成棒棒棒！！！: 0.2354 > 0.1172
+bgmv_shrink_kernel.json: 0.3225
+bgmv_shrink_kernel.json: 0.2354
+
+金标好啊好11111: 12.371 < 13.8528
+rope_backward_transform.json: 0.6183
+rope_backward_transform.json: 12.371
+
+金标好啊好11111: 15.7555 < 28.1564
+quantize_global.json: 0.4349
+quantize_global.json: 15.7555
+
+生成棒棒棒！！！: 2.2977 > 0.979
+fifth_order_sph_harmonics.json: 2.2932
+fifth_order_sph_harmonics.json: 2.2977
+
+金标好啊好11111: 33.1353 < 76.1162
+index_select_cat.json: 0.1826
+index_select_cat.json: 33.1353
+
+生成棒棒棒！！！: 1.6898 > 1.0523
+fused_recurrent_delta.json: 1.569
+fused_recurrent_delta.json: 1.6898
+
+金标好啊好11111: 31.823 < 34.1403
+seeded_dropout.json: 0.9719
+seeded_dropout.json: 31.823
+
+金标好啊好11111: 31.5884 < 82.9954
+softmax_triton3.json: 0.2281
+softmax_triton3.json: 31.5884
+
+金标好啊好11111: 28.3183 < 43.4341
+chunk_cumsum_vector.json: 0.6558
+chunk_cumsum_vector.json: 28.3183
+
+生成棒棒棒！！！: 47.1776 > 42.3681
+matmul_dequantize_int4.json: 0.7095
+matmul_dequantize_int4.json: 47.1776
+
+context_attn_bloom.json failed
+金标好啊好11111: 22.6081 < 75.1839
+fused_recurrent_hgrn.json: 0.1511
+fused_recurrent_hgrn.json: 22.6081
+
+生成棒棒棒！！！: 8.3701 > 4.6402
+block_sparse_attn.json: 1.7471
+block_sparse_attn.json: 8.3701
+
+金标好啊好11111: 33.4152 < 76.3369
+flash_attn.json: 0.3304
+flash_attn.json: 33.4152
+
+生成棒棒棒！！！: 13.4821 > 9.756
+quantize_kv_copy.json: 1.4485
+quantize_kv_copy.json: 13.4821
+
+金标好啊好11111: 20.0961 < 31.8695
+bmm_chunk_bwd.json: 0.6538
+bmm_chunk_bwd.json: 20.0961
+
+生成棒棒棒！！！: 73.3336 > 49.6412
+sgmv_expand_slice.json: 0.6379
+sgmv_expand_slice.json: 73.3336
+
+金标好啊好11111: 31.434 < 82.9284
+softmax_triton2.json: 0.3927
+softmax_triton2.json: 31.434
+
+金标好啊好11111: 28.7045 < 63.6222
+layernorm_fwd_triton.json: 0.4206
+layernorm_fwd_triton.json: 28.7045
+
+金标好啊好11111: 12.4639 < 13.8122
+rope_transform.json: 0.2786
+rope_transform.json: 12.4639
+
+生成棒棒棒！！！: 0.1409 > 0.0778
+matrix_reduction.json: 3.7802
+matrix_reduction.json: 0.1409
+
+金标好啊好11111: 32.7045 < 83.9292
+quantize_kv_transform.json: 0.409
+quantize_kv_transform.json: 32.7045
+
+金标好啊好11111: 63.894 < 75.6496
+cross_entropy1.json: 0.8033
+cross_entropy1.json: 63.894
+
+生成棒棒棒！！！: 73.5656 > 49.7695
+embedding_triton_kernel.json: 0.7103
+embedding_triton_kernel.json: 73.5656
+
+金标好啊好11111: 31.3573 < 87.5522
+dropout_triton.json: 0.1434
+dropout_triton.json: 31.3573
+
+生成棒棒棒！！！: 0.3363 > 0.2081
+matmul_triton1.json: 1.5496
+matmul_triton1.json: 0.3363
+
+金标好啊好11111: 28.9826 < 70.754
+multinomial_sampling.json: 0.2229
+multinomial_sampling.json: 28.9826
+
+金标好啊好11111: 18.9066 < 51.3949
+adam_update_triton.json: 0.2061
+adam_update_triton.json: 18.9066
+
+金标好啊好11111: 32.2405 < 79.9899
+token_softmax_bloom.json: 0.276
+token_softmax_bloom.json: 32.2405
+
+金标好啊好11111: 47.7041 < 49.3354
+fused_layernorm_triton.json: 1.0044
+fused_layernorm_triton.json: 47.7041
+
+金标好啊好11111: 31.3064 < 87.8334
+kldiv_compute.json: 0.1202
+kldiv_compute.json: 31.3064
+
+金标好啊好11111: 0.0734 < 0.0884
+reversed_cumsum_scalar.json: 0.8486
+reversed_cumsum_scalar.json: 0.0734
+
+context_attn_fwd.json failed
+生成棒棒棒！！！: 8.3722 > 5.4782
+llama_ff_triton.json: 1.5075
+llama_ff_triton.json: 8.3722
+
+金标好啊好11111: 31.0919 < 85.3411
+add_value.json: 0.2306
+add_value.json: 31.0919
+
+生成棒棒棒！！！: 27.9208 > 19.5247
+attention_kernel_aligned.json: 1.0172
+attention_kernel_aligned.json: 27.9208
+
+生成棒棒棒！！！: 0.8968 > 0.6069
+l2_norm_triton1.json: 1.4761
+l2_norm_triton1.json: 0.8968
+
+生成棒棒棒！！！: 19.7695 > 18.157
+rms_rbe_matmul.json: 1.1389
+rms_rbe_matmul.json: 19.7695
+
+生成棒棒棒！！！: 10.1659 > 7.7718
+triton_mul2.json: 1.3112
+triton_mul2.json: 10.1659
+
+int8_matmul_kernel.json failed
+生成棒棒棒！！！: 40.8043 > 28.6975
+kcache_copy_triton.json: 1.0489
+kcache_copy_triton.json: 40.8043
+
+金标好啊好11111: 31.511 < 57.3951
+triton_softmax.json: 0.8095
+triton_softmax.json: 31.511
+
+生成棒棒棒！！！: 12.2418 > 8.0355
+rms_matmul_rbe.json: 0.2919
+rms_matmul_rbe.json: 12.2418
+
+token_attn_mistral.json failed
+金标好啊好11111: 14.0355 < 15.2252
+fast_rope_embedding.json: 0.2157
+fast_rope_embedding.json: 14.0355
+
+金标好啊好11111: 29.4199 < 37.73
+chunk_gate_recurrence.json: 0.7363
+chunk_gate_recurrence.json: 29.4199
+
+金标好啊好11111: 29.4262 < 51.5047
+square_matrix.json: 0.709
+square_matrix.json: 29.4262
+
+生成棒棒棒！！！: 0.7415 > 0.5059
+sin_computation.json: 1.3117
+sin_computation.json: 0.7415
+
+金标好啊好11111: 17.5358 < 27.1181
+nested_loops_processing.json: 0.2448
+nested_loops_processing.json: 17.5358
+
+金标好啊好11111: 31.7837 < 81.1616
+kldiv_ops.json: 0.4775
+kldiv_ops.json: 31.7837
+
+生成棒棒棒！！！: 81.1804 > 73.8753
+matmul_triton_autotune.json: 1.0256
+matmul_triton_autotune.json: 81.1804
+
+金标好啊好11111: 57.3951 < 64.7151
+destindex_copy.json: 0.7357
+destindex_copy.json: 57.3951
+
+生成棒棒棒！！！: 0.4484 > 0.2566
+log_softmax.json: 1.598
+log_softmax.json: 0.4484
+
+金标好啊好11111: 16.4359 < 37.5129
+rotary_emb_nopad.json: 0.4776
+rotary_emb_nopad.json: 16.4359
+
+int8_dequant_matmul.json failed
+金标好啊好11111: 31.1313 < 85.2968
+mul_exponent_compensator.json: 0.108
+mul_exponent_compensator.json: 31.1313
+
+生成棒棒棒！！！: 4.2668 > 3.0051
+add_example.json: 0.8035
+add_example.json: 4.2668
+
+金标好啊好11111: 67.0086 < 71.105
+matmul_dequant_int4.json: 0.8979
+matmul_dequant_int4.json: 67.0086
+
+decay_cumsum.json failed
+金标好啊好11111: 29.963 < 72.5397
+quantize_copy_kv.json: 0.431
+quantize_copy_kv.json: 29.963
+
+生成棒棒棒！！！: 79.8311 > 74.0541
+triton_matmul.json: 1.1182
+triton_matmul.json: 79.8311
+
+生成棒棒棒！！！: 35.979 > 31.9681
+chunk_gated_attention.json: 1.0975
+chunk_gated_attention.json: 35.979
+
+生成棒棒棒！！！: 1.0463 > 0.7349
+l2_norm_bwd.json: 1.4409
+l2_norm_bwd.json: 1.0463
+
+金标好啊好11111: 29.6417 < 33.5571
+triton_linear_activation.json: 1.0136
+triton_linear_activation.json: 29.6417
+
+生成棒棒棒！！！: 84.7474 > 64.3991
+spinning_lock_reduction.json: 1.3158
+spinning_lock_reduction.json: 84.7474
+
+生成棒棒棒！！！: 0.8968 > 0.6608
+l2_norm_triton2.json: 1.531
+l2_norm_triton2.json: 0.8968
+
+生成棒棒棒！！！: 45.0628 > 36.374
+mixed_sparse_attention.json: 0.6229
+mixed_sparse_attention.json: 45.0628
+
+token_attn_llama2.json failed
+金标好啊好11111: 17.006 < 46.1919
+chunk_delta_fwd.json: 0.3813
+chunk_delta_fwd.json: 17.006
+
+金标好啊好11111: 34.2156 < 75.6282
+cross_entropy_ops.json: 0.26
+cross_entropy_ops.json: 34.2156
+
+生成棒棒棒！！！: 35.613 > 32.1287
+cross_entropy2.json: 0.0517
+cross_entropy2.json: 35.613
+
+金标好啊好11111: 31.5187 < 78.2931
+rms_norm_triton.json: 0.4754
+rms_norm_triton.json: 31.5187
+
+金标好啊好11111: 81.6403 < 82.4332
+matmul_triton2.json: 0.9623
+matmul_triton2.json: 81.6403
+
+金标好啊好11111: 33.5679 < 64.6182
+attention_llama.json: 0.5296
+attention_llama.json: 33.5679
+
+生成棒棒棒！！！: 25.1258 > 14.9417
+int4_matmul.json: 1.6143
+int4_matmul.json: 25.1258
+
+金标好啊好11111: 32.2692 < 34.0734
+iv_dependent_matmul.json: 0.9782
+iv_dependent_matmul.json: 32.2692
+
+[0.4642, 1.6245, 1.0009, 0.25, 0.3987, 0.4021, 0.97, 1.207, 0.2167, 0.9519, 0.3225, 0.6183, 0.4349, 2.2932, 0.1826, 1.569, 0.9719, 0.2281, 0.6558, 0.7095, 0.1511, 1.7471, 0.3304, 1.4485, 0.6538, 0.6379, 0.3927, 0.4206, 0.2786, 3.7802, 0.409, 0.8033, 0.7103, 0.1434, 1.5496, 0.2229, 0.2061, 0.276, 1.0044, 0.1202, 0.8486, 1.5075, 0.2306, 1.0172, 1.4761, 1.1389, 1.3112, 1.0489, 0.8095, 0.2919, 0.2157, 0.7363, 0.709, 1.3117, 0.2448, 0.4775, 1.0256, 0.7357, 1.598, 0.4776, 0.108, 0.8035, 0.8979, 0.431, 1.1182, 1.0975, 1.4409, 1.0136, 1.3158, 1.531, 0.6229, 0.3813, 0.26, 0.0517, 0.4754, 0.9623, 0.5296, 1.6143, 0.9782]
+
+perf_G_results
+speed up: 0.81
+efficiency: 28.25
+================================================================================================================================================================

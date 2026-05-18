@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/attention_kernel_perf.py", line 7, in <module>
+    from attention_kernel import _attention_rel_h_rel_w_kernel_aligned_device
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_kernel.py", line 246, in <module>
+    result_gold = test_attention_rel_h_rel_w_kernel_aligned_device()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_kernel.py", line 233, in test_attention_rel_h_rel_w_kernel_aligned_device
+    _attention_rel_h_rel_w_kernel_aligned_device(
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_kernel.py", line 147, in _attention_rel_h_rel_w_kernel_aligned_device
+    _fwd_kernel_aligned[grid](
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 691, in run
+    kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+    ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 381, in __getattribute__
+    self._init_handles()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 374, in _init_handles
+    raise OutOfResources(self.metadata.shared, max_shared, "shared memory")
+triton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 122880, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.

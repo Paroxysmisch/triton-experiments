@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/softmax_optimize_perf.py", line 8, in <module>
+    from softmax_optimize import softmax
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/softmax_optimize.py", line 101, in <module>
+    result_gold = test_softmax()
+                  ^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/softmax_optimize.py", line 87, in test_softmax
+    x1 = torch.randn(128, 512, device='cuda', dtype=torch.float32)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

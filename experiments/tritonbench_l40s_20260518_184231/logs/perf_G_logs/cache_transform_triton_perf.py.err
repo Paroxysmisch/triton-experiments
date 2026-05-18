@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/cache_transform_triton_perf.py", line 7, in <module>
+    from cache_transform_triton import get_xine_cache
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/cache_transform_triton.py", line 165, in <module>
+    result_gold = test_get_xine_cache()
+                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/cache_transform_triton.py", line 153, in test_get_xine_cache
+    lengths = torch.randint(1, max_length, (num_seqs,), dtype=torch.int32, device='cuda')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

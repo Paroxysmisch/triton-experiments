@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_G/./tmp/matmul_persistent_triton_perf.py", line 7, in <module>
+    from matmul_persistent_triton import matmul_persistent
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/matmul_persistent_triton.py", line 152, in <module>
+    result_gold = test_matmul_persistent()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/matmul_persistent_triton.py", line 144, in test_matmul_persistent
+    a = torch.randn((M, K), dtype=torch.float16, device='cuda')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 319, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

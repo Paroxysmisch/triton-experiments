@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/tril_mm_and_scale_perf.py", line 54, in <module>
+    op_perf.get_input_tensors()
+  File "/home/mb2412/TritonBench/performance_metrics/perf_T/./tmp/tril_mm_and_scale_perf.py", line 25, in get_input_tensors
+    B = torch.rand((n, p), dtype=self.dtype or torch.float32)
+                       ^
+NameError: name 'p' is not defined
