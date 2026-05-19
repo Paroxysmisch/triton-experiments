@@ -1,0 +1,633 @@
+{
+  "repo_root": "/home/mb2412/triton-experiments",
+  "run_dir": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231",
+  "materialized_root": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates",
+  "seed": 0,
+  "timeout": 60.0,
+  "dry_run": false,
+  "case_count": 22,
+  "cases": [
+    {
+      "channel": "G",
+      "name": "fused_recurrent_retention",
+      "speedup": 1.6245,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/fused_recurrent_retention.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0095.py"
+      ]
+    },
+    {
+      "channel": "G",
+      "name": "fifth_order_sph_harmonics",
+      "speedup": 2.2932,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/fifth_order_sph_harmonics.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "matmul_triton1",
+      "speedup": 1.5496,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/matmul_triton1.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "fused_layernorm_triton",
+      "speedup": 1.0044,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/fused_layernorm_triton.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "l2_norm_triton1",
+      "speedup": 1.4761,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/l2_norm_triton1.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "triton_mul2",
+      "speedup": 1.3112,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/triton_mul2.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0148.py"
+      ]
+    },
+    {
+      "channel": "G",
+      "name": "sin_computation",
+      "speedup": 1.3117,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/sin_computation.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "chunk_gated_attention",
+      "speedup": 1.0975,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/chunk_gated_attention.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "G",
+      "name": "l2_norm_bwd",
+      "speedup": 1.4409,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/l2_norm_bwd.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/qwen_092/candidate_0046.py"
+      ]
+    },
+    {
+      "channel": "G",
+      "name": "spinning_lock_reduction",
+      "speedup": 1.3158,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/spinning_lock_reduction.py",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "channel": "T",
+      "name": "tensordot_rsqrt",
+      "speedup": 2.2318,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/tensordot_rsqrt.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0092.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "elu_linear",
+      "speedup": 1.9,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/elu_linear.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0146.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "det",
+      "speedup": 1.5777,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/det.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/linalg.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "lu.py",
+      "speedup": 1.1829,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/lu.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/lu.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "invert_matrix_lu",
+      "speedup": 1.6266,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/invert_matrix_lu.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/invert_matrix_lu.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "broadcast_tensors",
+      "speedup": 2.7575,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/broadcast_tensors.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/broadcast_tensors.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "fused_qr_solve",
+      "speedup": 1.7538,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_qr_solve.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0080.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "sum_std",
+      "speedup": 1.0316,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/sum_std.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0052.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "dropout_sigmoid_linear",
+      "speedup": 1.6489,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/dropout_sigmoid_linear.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0094.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "fused_cross_entropy_log_softmax",
+      "speedup": 1.4365,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_cross_entropy_log_softmax.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0078.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "fused_transformer_block",
+      "speedup": 2.2619,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_transformer_block.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/fused_transformer_block.py"
+      ]
+    },
+    {
+      "channel": "T",
+      "name": "sigmoid_adaptive_avg_pool2d",
+      "speedup": 1.4444,
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/sigmoid_adaptive_avg_pool2d.py",
+      "candidate_count": 1,
+      "candidates": [
+        "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0081.py"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0095.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/fused_recurrent_retention.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0095.py\", line 19\n    @triton.jit\n    ^\nIndentationError: expected an indented block after function definition on line 11\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1129, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1059, in source_to_code\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0095.py\", line 19\n    @triton.jit\n    ^\nIndentationError: expected an indented block after function definition on line 11\n",
+      "reference_import_error": null,
+      "channel": "G",
+      "name": "fused_recurrent_retention",
+      "speedup": 1.6245,
+      "candidate_rel": "Bench_G_coder_specofic/deepseek_094/candidate_0095.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/deepseek_094/candidate_0148.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/triton_mul2.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "result_gold",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "G",
+      "name": "triton_mul2",
+      "speedup": 1.3112,
+      "candidate_rel": "Bench_G_coder_specofic/deepseek_094/candidate_0148.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_G_coder_specofic/qwen_092/candidate_0046.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_G_v1/l2_norm_bwd.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "result_gold",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "G",
+      "name": "l2_norm_bwd",
+      "speedup": 1.4409,
+      "candidate_rel": "Bench_G_coder_specofic/qwen_092/candidate_0046.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0092.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/tensordot_rsqrt.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0092.py\", line 2, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/torch.py\", line 3\n    void permute_copy_kernel(\n         ^^^^^^^^^^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "tensordot_rsqrt",
+      "speedup": 2.2318,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/def_0092.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0146.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/elu_linear.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0146.py\", line 1, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/torch.py\", line 3\n    def torch.permute_copy(input, dims) -> Tensor:\n             ^\nSyntaxError: expected '('\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "elu_linear",
+      "speedup": 1.9,
+      "candidate_rel": "Bench_T_coder_specific/deepseek_full/def_0146.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/linalg.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/det.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/linalg.py\", line 1, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/torch.py\", line 3\n    def torch.permute_copy(input, dims) -> Tensor:\n             ^\nSyntaxError: expected '('\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/linalg.py\", line 5, in <module>\n    from torch._inductor.triton_heuristics import reduction\nModuleNotFoundError: No module named 'torch._inductor.triton_heuristics'\n",
+      "reference_import_error": null,
+      "channel": "T",
+      "name": "det",
+      "speedup": 1.5777,
+      "candidate_rel": "Bench_T_coder_specific/deepseek_full/linalg.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/lu.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/lu.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/lu.py\", line 1\n    The provided Triton wrapper function seems to be correctly written. It correctly matches the input parameters and output parameters as described in the functional description. The math description also matches the functionality. The only potential improvement could be in the comments, as they may not fully explain the functionality of the function.\n        ^^^^^^^^\nSyntaxError: invalid syntax\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 991, in exec_module\n  File \"<frozen importlib._bootstrap_external>\", line 1129, in get_code\n  File \"<frozen importlib._bootstrap_external>\", line 1059, in source_to_code\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/lu.py\", line 1\n    The provided Triton wrapper function seems to be correctly written. It correctly matches the input parameters and output parameters as described in the functional description. The math description also matches the functionality. The only potential improvement could be in the comments, as they may not fully explain the functionality of the function.\n        ^^^^^^^^\nSyntaxError: invalid syntax\n",
+      "reference_import_error": null,
+      "channel": "T",
+      "name": "lu.py",
+      "speedup": 1.1829,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/lu.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/invert_matrix_lu.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/invert_matrix_lu.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/invert_matrix_lu.py\", line 5, in <module>\n    A = triton.tensor(np.array([[1, 2, 3], [0, 1, 4], [5, 6, 0]], dtype=np.float32))\n        ^^^^^^^^^^^^^\nAttributeError: module 'triton' has no attribute 'tensor'\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/invert_matrix_lu.py\", line 5, in <module>\n    A = triton.tensor(np.array([[1, 2, 3], [0, 1, 4], [5, 6, 0]], dtype=np.float32))\n        ^^^^^^^^^^^^^\nAttributeError: module 'triton' has no attribute 'tensor'\n",
+      "reference_import_error": null,
+      "channel": "T",
+      "name": "invert_matrix_lu",
+      "speedup": 1.6266,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/invert_matrix_lu.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/broadcast_tensors.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/broadcast_tensors.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "broadcast_tensors",
+      "speedup": 2.7575,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/broadcast_tensors.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0080.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_qr_solve.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "fused_qr_solve",
+      "speedup": 1.7538,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/def_0080.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0052.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/sum_std.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/def_0052.py\", line 1, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek_full/torch.py\", line 3\n    def torch.permute_copy(input, dims) -> Tensor:\n             ^\nSyntaxError: expected '('\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "sum_std",
+      "speedup": 1.0316,
+      "candidate_rel": "Bench_T_coder_specific/deepseek_full/def_0052.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0094.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/dropout_sigmoid_linear.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0094.py\", line 1, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/torch.py\", line 3\n    void permute_copy_kernel(\n         ^^^^^^^^^^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "dropout_sigmoid_linear",
+      "speedup": 1.6489,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/def_0094.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0078.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_cross_entropy_log_softmax.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0078.py\", line 1, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/torch.py\", line 3\n    void permute_copy_kernel(\n         ^^^^^^^^^^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": true,
+      "reference_import_ok": true,
+      "candidate_result_name": null,
+      "reference_result_name": "test_results",
+      "strict_status": "fail",
+      "strict_mismatches": [
+        "$: type differs: NoneType != dict"
+      ],
+      "stdout_false_positive": true,
+      "channel": "T",
+      "name": "fused_cross_entropy_log_softmax",
+      "speedup": 1.4365,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/def_0078.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/fused_transformer_block.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/fused_transformer_block.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/fused_transformer_block.py\", line 2, in <module>\n    import torch\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/torch.py\", line 3\n    void permute_copy_kernel(\n         ^^^^^^^^^^^^^^^^^^^\nSyntaxError: invalid syntax\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/fused_transformer_block.py\", line 13, in <module>\n    BLOCK_SIZE: tl.constexpr,\n                ^^\nNameError: name 'tl' is not defined\n",
+      "reference_import_error": null,
+      "channel": "T",
+      "name": "fused_transformer_block",
+      "speedup": 2.2619,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/fused_transformer_block.py"
+    },
+    {
+      "candidate": "/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0081.py",
+      "reference": "/home/mb2412/triton-experiments/data/TritonBench_T_v1/sigmoid_adaptive_avg_pool2d.py",
+      "seed": 0,
+      "repo_stdout_equal": true,
+      "candidate_stdout": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0081.py\", line 2, in <module>\n    from triton import Tensor\nImportError: cannot import name 'Tensor' from 'triton' (/home/mb2412/.local/lib/python3.12/site-packages/triton/__init__.py)\n"
+      },
+      "reference_stdout": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate_import_ok": false,
+      "reference_import_ok": true,
+      "strict_status": "import_error",
+      "candidate_import_error": "Traceback (most recent call last):\n  File \"/home/mb2412/triton-experiments/tools/semantic_checks/strict_io_compare.py\", line 73, in _import_module\n    spec.loader.exec_module(module)\n  File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/home/mb2412/triton-experiments/experiments/tritonbench_l40s_20260518_184231/materialized_candidates/Bench_T_coder_specific/deepseek/def_0081.py\", line 2, in <module>\n    from triton import Tensor\nImportError: cannot import name 'Tensor' from 'triton' (/home/mb2412/.local/lib/python3.12/site-packages/triton/__init__.py)\n",
+      "reference_import_error": null,
+      "channel": "T",
+      "name": "sigmoid_adaptive_avg_pool2d",
+      "speedup": 1.4444,
+      "candidate_rel": "Bench_T_coder_specific/deepseek/def_0081.py"
+    }
+  ],
+  "stdout_false_positive_count": 9,
+  "strict_fail_count": 9,
+  "import_error_count": 6
+}
