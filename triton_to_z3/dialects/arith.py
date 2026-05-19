@@ -11,15 +11,11 @@ from ..types import (
     FloatType,
     IntegerType,
     MLIRType,
-    BFloat16Type,
     IndexType,
-    PointerType,
     TensorType,
     element_type,
-    fp_sort_for_width,
     is_float_type,
     make_z3_var,
-    parse_type,
     z3_sort,
 )
 
@@ -31,6 +27,7 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
+
 
 def handle(op: "Operation", state: "InterpreterState") -> None:
     name = op.op.removeprefix("arith.")
@@ -75,7 +72,9 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
         case "ceildivsi":
             _binop_bv(op, state, _ceildivsi)
         case "ceildivui":
-            _binop_bv(op, state, lambda l, r: z3.UDiv(l + r - z3.BitVecVal(1, l.size()), r))
+            _binop_bv(
+                op, state, lambda l, r: z3.UDiv(l + r - z3.BitVecVal(1, l.size()), r)
+            )
         case "floordivsi":
             _binop_bv(op, state, _floordivsi)
         case "remsi":
@@ -189,7 +188,11 @@ def _handle_constant(op: "Operation", state: "InterpreterState") -> None:
             raw = inner.group(1).strip()
             state.set(res, _parse_scalar_constant(raw, etype), result_type)
         else:
-            state.set(res, make_z3_var(f"const_{res}", result_type or FloatType(32)), result_type)
+            state.set(
+                res,
+                make_z3_var(f"const_{res}", result_type or FloatType(32)),
+                result_type,
+            )
         return
 
     # Scalar constant
@@ -214,8 +217,14 @@ def _parse_scalar_constant(raw: str, etype: MLIRType | None) -> z3.ExprRef:
                 return z3.fpPlusInfinity(z3.Float64())
             case _:
                 # Treat as float bit pattern
-                sort = etype.to_z3_sort() if etype and is_float_type(etype) else z3.Float32()
-                return z3.fpBVToFP(z3.BitVecVal(int_val, sort.ebits() + sort.sbits()), sort)
+                sort = (
+                    etype.to_z3_sort()
+                    if etype and is_float_type(etype)
+                    else z3.Float32()
+                )
+                return z3.fpBVToFP(
+                    z3.BitVecVal(int_val, sort.ebits() + sort.sbits()), sort
+                )
 
     # Boolean
     if raw == "true":
@@ -234,12 +243,16 @@ def _parse_scalar_constant(raw: str, etype: MLIRType | None) -> z3.ExprRef:
     # Try integer
     try:
         int_val = int(raw.split(":")[0].strip())
-        if etype and isinstance(element_type(etype) if isinstance(etype, TensorType) else etype, IntegerType):
+        if etype and isinstance(
+            element_type(etype) if isinstance(etype, TensorType) else etype, IntegerType
+        ):
             w = (element_type(etype) if isinstance(etype, TensorType) else etype).width
             if w == 1:
                 return z3.BoolVal(bool(int_val))
             return z3.BitVecVal(int_val, w)
-        if etype and isinstance(element_type(etype) if isinstance(etype, TensorType) else etype, IndexType):
+        if etype and isinstance(
+            element_type(etype) if isinstance(etype, TensorType) else etype, IndexType
+        ):
             return z3.BitVecVal(int_val, 64)
         return z3.BitVecVal(int_val, 32)
     except (ValueError, TypeError):
@@ -261,6 +274,7 @@ def _parse_scalar_constant(raw: str, etype: MLIRType | None) -> z3.ExprRef:
 # ---------------------------------------------------------------------------
 # Binary / unary helpers
 # ---------------------------------------------------------------------------
+
 
 def _binop_fp(
     op: "Operation",
@@ -318,6 +332,7 @@ def _match_bv_widths(a: z3.ExprRef, b: z3.ExprRef) -> tuple[z3.ExprRef, z3.ExprR
 # Integer division helpers
 # ---------------------------------------------------------------------------
 
+
 def _ceildivsi(l: z3.ExprRef, r: z3.ExprRef) -> z3.ExprRef:
     one = z3.BitVecVal(1, l.size())
     # ceildiv(a, b) when both positive: (a + b - 1) / b
@@ -325,12 +340,15 @@ def _ceildivsi(l: z3.ExprRef, r: z3.ExprRef) -> z3.ExprRef:
 
 
 def _floordivsi(l: z3.ExprRef, r: z3.ExprRef) -> z3.ExprRef:
-    return l / r  # Z3 signed division truncates toward zero; close enough for symbolic analysis
+    return (
+        l / r
+    )  # Z3 signed division truncates toward zero; close enough for symbolic analysis
 
 
 # ---------------------------------------------------------------------------
 # Extended arithmetic
 # ---------------------------------------------------------------------------
+
 
 def _extended_add(op: "Operation", state: "InterpreterState") -> None:
     if len(op.operands) < 2 or len(op.results) < 2:
@@ -374,6 +392,7 @@ def _extended_mul(op: "Operation", state: "InterpreterState", *, signed: bool) -
 # Comparisons
 # ---------------------------------------------------------------------------
 
+
 def _handle_cmpi(op: "Operation", state: "InterpreterState") -> None:
     if len(op.operands) < 2 or not op.results:
         return
@@ -383,17 +402,28 @@ def _handle_cmpi(op: "Operation", state: "InterpreterState") -> None:
     lhs, rhs = _match_bv_widths(lhs, rhs)
 
     match pred:
-        case "eq":  result = lhs == rhs
-        case "ne":  result = lhs != rhs
-        case "slt": result = lhs < rhs
-        case "sle": result = lhs <= rhs
-        case "sgt": result = lhs > rhs
-        case "sge": result = lhs >= rhs
-        case "ult": result = z3.ULT(lhs, rhs)
-        case "ule": result = z3.ULE(lhs, rhs)
-        case "ugt": result = z3.UGT(lhs, rhs)
-        case "uge": result = z3.UGE(lhs, rhs)
-        case _:     result = lhs == rhs
+        case "eq":
+            result = lhs == rhs
+        case "ne":
+            result = lhs != rhs
+        case "slt":
+            result = lhs < rhs
+        case "sle":
+            result = lhs <= rhs
+        case "sgt":
+            result = lhs > rhs
+        case "sge":
+            result = lhs >= rhs
+        case "ult":
+            result = z3.ULT(lhs, rhs)
+        case "ule":
+            result = z3.ULE(lhs, rhs)
+        case "ugt":
+            result = z3.UGT(lhs, rhs)
+        case "uge":
+            result = z3.UGE(lhs, rhs)
+        case _:
+            result = lhs == rhs
 
     state.set(op.results[0], result)
 
@@ -406,23 +436,40 @@ def _handle_cmpf(op: "Operation", state: "InterpreterState") -> None:
     rhs = state.get_fp(op.operands[1])
 
     match pred:
-        case "oeq":         result = z3.fpEQ(lhs, rhs)
-        case "ogt":         result = z3.fpGT(lhs, rhs)
-        case "oge":         result = z3.fpGEQ(lhs, rhs)
-        case "olt":         result = z3.fpLT(lhs, rhs)
-        case "ole":         result = z3.fpLEQ(lhs, rhs)
-        case "one":         result = z3.Or(z3.fpLT(lhs, rhs), z3.fpGT(lhs, rhs))
-        case "ord":         result = z3.Not(z3.Or(z3.fpIsNaN(lhs), z3.fpIsNaN(rhs)))
-        case "ueq":         result = z3.Not(z3.Or(z3.fpLT(lhs, rhs), z3.fpGT(lhs, rhs)))
-        case "ugt":         result = z3.Not(z3.fpLEQ(lhs, rhs))
-        case "uge":         result = z3.Not(z3.fpLT(lhs, rhs))
-        case "ult":         result = z3.Not(z3.fpGEQ(lhs, rhs))
-        case "ule":         result = z3.Not(z3.fpGT(lhs, rhs))
-        case "une":         result = z3.Not(z3.fpEQ(lhs, rhs))
-        case "uno":         result = z3.Or(z3.fpIsNaN(lhs), z3.fpIsNaN(rhs))
-        case "always_true": result = z3.BoolVal(True)
-        case "always_false":result = z3.BoolVal(False)
-        case _:             result = z3.fpEQ(lhs, rhs)
+        case "oeq":
+            result = z3.fpEQ(lhs, rhs)
+        case "ogt":
+            result = z3.fpGT(lhs, rhs)
+        case "oge":
+            result = z3.fpGEQ(lhs, rhs)
+        case "olt":
+            result = z3.fpLT(lhs, rhs)
+        case "ole":
+            result = z3.fpLEQ(lhs, rhs)
+        case "one":
+            result = z3.Or(z3.fpLT(lhs, rhs), z3.fpGT(lhs, rhs))
+        case "ord":
+            result = z3.Not(z3.Or(z3.fpIsNaN(lhs), z3.fpIsNaN(rhs)))
+        case "ueq":
+            result = z3.Not(z3.Or(z3.fpLT(lhs, rhs), z3.fpGT(lhs, rhs)))
+        case "ugt":
+            result = z3.Not(z3.fpLEQ(lhs, rhs))
+        case "uge":
+            result = z3.Not(z3.fpLT(lhs, rhs))
+        case "ult":
+            result = z3.Not(z3.fpGEQ(lhs, rhs))
+        case "ule":
+            result = z3.Not(z3.fpGT(lhs, rhs))
+        case "une":
+            result = z3.Not(z3.fpEQ(lhs, rhs))
+        case "uno":
+            result = z3.Or(z3.fpIsNaN(lhs), z3.fpIsNaN(rhs))
+        case "always_true":
+            result = z3.BoolVal(True)
+        case "always_false":
+            result = z3.BoolVal(False)
+        case _:
+            result = z3.fpEQ(lhs, rhs)
 
     state.set(op.results[0], result)
 
@@ -430,6 +477,7 @@ def _handle_cmpf(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Select
 # ---------------------------------------------------------------------------
+
 
 def _handle_select(op: "Operation", state: "InterpreterState") -> None:
     if len(op.operands) < 3 or not op.results:
@@ -444,6 +492,7 @@ def _handle_select(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Type casts
 # ---------------------------------------------------------------------------
+
 
 def _result_type_of(op: "Operation") -> MLIRType | None:
     if op.result_types:
@@ -464,7 +513,9 @@ def _handle_fp_cast(op: "Operation", state: "InterpreterState") -> None:
         state.set(op.results[0], src, target)
 
 
-def _handle_int_ext(op: "Operation", state: "InterpreterState", *, signed: bool) -> None:
+def _handle_int_ext(
+    op: "Operation", state: "InterpreterState", *, signed: bool
+) -> None:
     if not op.operands or not op.results:
         return
     src = state.get_bv(op.operands[0])
@@ -472,6 +523,7 @@ def _handle_int_ext(op: "Operation", state: "InterpreterState", *, signed: bool)
     target_width = 64
     if target:
         from ..types import bv_width
+
         target_width = bv_width(target)
     if z3.is_bv(src):
         ext_bits = max(0, target_width - src.size())
@@ -489,6 +541,7 @@ def _handle_int_trunc(op: "Operation", state: "InterpreterState") -> None:
     target_width = 32
     if target:
         from ..types import bv_width
+
         target_width = bv_width(target)
     if z3.is_bv(src):
         state.set(op.results[0], z3.Extract(target_width - 1, 0, src), target)
@@ -496,7 +549,9 @@ def _handle_int_trunc(op: "Operation", state: "InterpreterState") -> None:
         state.set(op.results[0], src, target)
 
 
-def _handle_int_to_fp(op: "Operation", state: "InterpreterState", *, signed: bool) -> None:
+def _handle_int_to_fp(
+    op: "Operation", state: "InterpreterState", *, signed: bool
+) -> None:
     if not op.operands or not op.results:
         return
     src = state.get_bv(op.operands[0])
@@ -504,14 +559,22 @@ def _handle_int_to_fp(op: "Operation", state: "InterpreterState", *, signed: boo
     target_sort = z3_sort(target) if target else z3.Float32()
     if z3.is_bv(src) and isinstance(target_sort, z3.FPSortRef):
         if signed:
-            state.set(op.results[0], z3.fpSignedToFP(z3.RNE(), src, target_sort), target)
+            state.set(
+                op.results[0], z3.fpSignedToFP(z3.RNE(), src, target_sort), target
+            )
         else:
-            state.set(op.results[0], z3.fpUnsignedToFP(z3.RNE(), src, target_sort), target)
+            state.set(
+                op.results[0], z3.fpUnsignedToFP(z3.RNE(), src, target_sort), target
+            )
     else:
-        state.set(op.results[0], make_z3_var(op.results[0], target or FloatType(32)), target)
+        state.set(
+            op.results[0], make_z3_var(op.results[0], target or FloatType(32)), target
+        )
 
 
-def _handle_fp_to_int(op: "Operation", state: "InterpreterState", *, signed: bool) -> None:
+def _handle_fp_to_int(
+    op: "Operation", state: "InterpreterState", *, signed: bool
+) -> None:
     if not op.operands or not op.results:
         return
     src = state.get_fp(op.operands[0])
@@ -519,14 +582,25 @@ def _handle_fp_to_int(op: "Operation", state: "InterpreterState", *, signed: boo
     target_width = 32
     if target:
         from ..types import bv_width
+
         target_width = bv_width(target)
     if z3.is_fp(src):
         if signed:
-            state.set(op.results[0], z3.fpToSBV(z3.RTZ(), src, z3.BitVecSort(target_width)), target)
+            state.set(
+                op.results[0],
+                z3.fpToSBV(z3.RTZ(), src, z3.BitVecSort(target_width)),
+                target,
+            )
         else:
-            state.set(op.results[0], z3.fpToUBV(z3.RTZ(), src, z3.BitVecSort(target_width)), target)
+            state.set(
+                op.results[0],
+                z3.fpToUBV(z3.RTZ(), src, z3.BitVecSort(target_width)),
+                target,
+            )
     else:
-        state.set(op.results[0], make_z3_var(op.results[0], target or IntegerType(32)), target)
+        state.set(
+            op.results[0], make_z3_var(op.results[0], target or IntegerType(32)), target
+        )
 
 
 def _handle_index_cast(op: "Operation", state: "InterpreterState") -> None:
@@ -537,6 +611,7 @@ def _handle_index_cast(op: "Operation", state: "InterpreterState") -> None:
     target_width = 64
     if target:
         from ..types import bv_width
+
         target_width = bv_width(target)
     if z3.is_bv(src):
         sw = src.size()
@@ -558,9 +633,17 @@ def _handle_bitcast(op: "Operation", state: "InterpreterState") -> None:
     target = _result_type_of(op)
     target_sort = z3_sort(target) if target else None
 
-    if target_sort is not None and isinstance(target_sort, z3.FPSortRef) and z3.is_bv(src):
+    if (
+        target_sort is not None
+        and isinstance(target_sort, z3.FPSortRef)
+        and z3.is_bv(src)
+    ):
         state.set(op.results[0], z3.fpBVToFP(src, target_sort), target)
-    elif target_sort is not None and z3.is_fp(src) and not isinstance(target_sort, z3.FPSortRef):
+    elif (
+        target_sort is not None
+        and z3.is_fp(src)
+        and not isinstance(target_sort, z3.FPSortRef)
+    ):
         state.set(op.results[0], z3.fpToIEEEBV(src), target)
     else:
         state.set(op.results[0], src, target)

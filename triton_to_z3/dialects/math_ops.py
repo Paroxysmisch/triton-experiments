@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 
 import z3
 
-from ..types import FloatType, IntegerType, element_type, is_float_type, make_z3_var, z3_sort
 
 if TYPE_CHECKING:
     from ..interpreter import InterpreterState
@@ -50,6 +49,7 @@ def _ternary_fn(name: str, sort: z3.SortRef) -> z3.FuncDeclRef:
 # ---------------------------------------------------------------------------
 # Unary / binary / ternary FP helpers via uninterpreted functions
 # ---------------------------------------------------------------------------
+
 
 def _apply_unary_uif(
     op: "Operation",
@@ -97,6 +97,7 @@ def _apply_ternary_uif(
 # Integer unary helpers
 # ---------------------------------------------------------------------------
 
+
 def _apply_int_unary_uif(
     op: "Operation",
     state: "InterpreterState",
@@ -115,6 +116,7 @@ def _apply_int_unary_uif(
 # Classification ops (return bool)
 # ---------------------------------------------------------------------------
 
+
 def _classification(
     op: "Operation",
     state: "InterpreterState",
@@ -129,6 +131,7 @@ def _classification(
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
+
 
 def handle(op: "Operation", state: "InterpreterState") -> None:
     name = op.op.removeprefix("math.")
@@ -276,7 +279,9 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
         case "isinf":
             _classification(op, state, z3.fpIsInf)
         case "isfinite":
-            _classification(op, state, lambda x: z3.Not(z3.Or(z3.fpIsNaN(x), z3.fpIsInf(x))))
+            _classification(
+                op, state, lambda x: z3.Not(z3.Or(z3.fpIsNaN(x), z3.fpIsInf(x)))
+            )
         case "isnormal":
             _classification(op, state, z3.fpIsNormal)
 
@@ -289,6 +294,7 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Helpers that use native Z3 FP operations (not uninterpreted)
 # ---------------------------------------------------------------------------
+
 
 def _apply_unary(
     op: "Operation",

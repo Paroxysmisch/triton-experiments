@@ -14,7 +14,6 @@ import z3
 from ..types import (
     FloatType,
     IntegerType,
-    IndexType,
     PointerType,
     TensorType,
     element_type as get_element_type,
@@ -63,6 +62,7 @@ _EXTERN_SYMBOL_MAP: dict[str, str] = {
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
+
 
 def handle(op: "Operation", state: "InterpreterState") -> None:
     name = op.op.removeprefix("tt.")
@@ -153,6 +153,7 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
 # Memory
 # ---------------------------------------------------------------------------
 
+
 def _handle_load(op: "Operation", state: "InterpreterState") -> None:
     """tt.load produces a fresh terminal symbol (the loaded value is unknown)."""
     if not op.results:
@@ -197,6 +198,7 @@ def _handle_store(op: "Operation", state: "InterpreterState") -> None:
 # Pointer arithmetic
 # ---------------------------------------------------------------------------
 
+
 def _handle_addptr(op: "Operation", state: "InterpreterState") -> None:
     """tt.addptr %ptr, %offset → ptr + offset."""
     if len(op.operands) < 2 or not op.results:
@@ -226,6 +228,7 @@ def _handle_addptr(op: "Operation", state: "InterpreterState") -> None:
 # Shape / broadcast / splat  (aliases in symbolic execution)
 # ---------------------------------------------------------------------------
 
+
 def _handle_alias(op: "Operation", state: "InterpreterState") -> None:
     """Splat/broadcast/expand_dims/reshape/trans – the symbolic value is unchanged."""
     if not op.operands or not op.results:
@@ -238,6 +241,7 @@ def _handle_alias(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # make_range
 # ---------------------------------------------------------------------------
+
 
 def _handle_make_range(op: "Operation", state: "InterpreterState") -> None:
     """tt.make_range {start, end} → fresh symbolic integer."""
@@ -253,6 +257,7 @@ def _handle_make_range(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Program ID / grid
 # ---------------------------------------------------------------------------
+
 
 def _extract_axis(op: "Operation") -> str:
     """Extract axis keyword (x/y/z) from get_program_id / get_num_programs."""
@@ -292,12 +297,12 @@ def _handle_get_num_programs(op: "Operation", state: "InterpreterState") -> None
 # Reductions
 # ---------------------------------------------------------------------------
 
+
 def _handle_reduce(op: "Operation", state: "InterpreterState") -> None:
     """tt.reduce – the result is a terminal; the combiner region is recorded as metadata."""
     if not op.results:
         return
 
-    from ..interpreter import interpret_ops
 
     res = op.results[0]
     result_type = op.result_types[0] if op.result_types else None
@@ -338,6 +343,7 @@ def _handle_scan(op: "Operation", state: "InterpreterState") -> None:
 # Extern elementwise
 # ---------------------------------------------------------------------------
 
+
 def _handle_extern_elementwise(op: "Operation", state: "InterpreterState") -> None:
     """tt.extern_elementwise – map known symbols to uninterpreted functions."""
     if not op.results:
@@ -351,7 +357,11 @@ def _handle_extern_elementwise(op: "Operation", state: "InterpreterState") -> No
     sort = etype.to_z3_sort()
 
     if len(op.operands) == 1:
-        arg = state.get_fp(op.operands[0]) if is_float_type(etype) else state.get(op.operands[0])
+        arg = (
+            state.get_fp(op.operands[0])
+            if is_float_type(etype)
+            else state.get(op.operands[0])
+        )
         fn = z3.Function(fn_name, sort, sort)
         state.set(res, fn(arg), result_type)
     elif len(op.operands) == 2:
@@ -371,6 +381,7 @@ def _handle_extern_elementwise(op: "Operation", state: "InterpreterState") -> No
 # Dot product (matmul)
 # ---------------------------------------------------------------------------
 
+
 def _handle_dot(op: "Operation", state: "InterpreterState") -> None:
     """tt.dot %a, %b[, %c] – matrix multiply; result is a terminal."""
     if not op.results:
@@ -385,6 +396,7 @@ def _handle_dot(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Atomic operations
 # ---------------------------------------------------------------------------
+
 
 def _handle_atomic(op: "Operation", state: "InterpreterState", kind: str) -> None:
     """Atomic ops – result is a fresh terminal (side-effect is opaque)."""
@@ -401,6 +413,7 @@ def _handle_atomic(op: "Operation", state: "InterpreterState", kind: str) -> Non
 # Triton-level casts
 # ---------------------------------------------------------------------------
 
+
 def _handle_tt_cast(op: "Operation", state: "InterpreterState") -> None:
     """tt.fp_to_fp / tt.int_to_fp / tt.fp_to_int."""
     if not op.operands or not op.results:
@@ -415,11 +428,15 @@ def _handle_tt_cast(op: "Operation", state: "InterpreterState") -> None:
             state.set(op.results[0], z3.fpToFP(z3.RNE(), src, target_sort), result_type)
             return
         if isinstance(target_sort, z3.FPSortRef) and z3.is_bv(src):
-            state.set(op.results[0], z3.fpSignedToFP(z3.RNE(), src, target_sort), result_type)
+            state.set(
+                op.results[0], z3.fpSignedToFP(z3.RNE(), src, target_sort), result_type
+            )
             return
         if not isinstance(target_sort, z3.FPSortRef) and z3.is_fp(src):
             w = target_sort.size() if hasattr(target_sort, "size") else 32
-            state.set(op.results[0], z3.fpToSBV(z3.RTZ(), src, z3.BitVecSort(w)), result_type)
+            state.set(
+                op.results[0], z3.fpToSBV(z3.RTZ(), src, z3.BitVecSort(w)), result_type
+            )
             return
 
     state.set(op.results[0], src, result_type)
@@ -428,6 +445,7 @@ def _handle_tt_cast(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Calls
 # ---------------------------------------------------------------------------
+
 
 def _handle_call(op: "Operation", state: "InterpreterState") -> None:
     """tt.call – treat results as fresh symbols."""
@@ -438,6 +456,7 @@ def _handle_call(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # make_tensor_ptr
 # ---------------------------------------------------------------------------
+
 
 def _handle_make_tensor_ptr(op: "Operation", state: "InterpreterState") -> None:
     if not op.results:

@@ -6,19 +6,13 @@ appropriate dialect handler.
 
 from __future__ import annotations
 
-from copy import copy
 from dataclasses import dataclass, field
 
 import z3
 
-from .parser import Operation, Function, parse_ttir
+from .parser import Operation, parse_ttir
 from .types import (
-    FloatType,
-    IntegerType,
     MLIRType,
-    element_type,
-    is_float_type,
-    is_int_type,
     make_z3_var,
 )
 
@@ -26,6 +20,7 @@ from .types import (
 # ---------------------------------------------------------------------------
 # Interpreter state
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class InterpreterState:
@@ -39,7 +34,9 @@ class InterpreterState:
 
     # -- Read / write helpers ---------------------------------------------
 
-    def set(self, name: str, val: z3.ExprRef, mlir_type: MLIRType | None = None) -> None:
+    def set(
+        self, name: str, val: z3.ExprRef, mlir_type: MLIRType | None = None
+    ) -> None:
         self.regs[name] = val
         if mlir_type is not None:
             self.reg_types[name] = mlir_type
@@ -86,6 +83,7 @@ class InterpreterState:
         width = 32
         if t is not None:
             from .types import bv_width
+
             width = bv_width(t)
         return z3.BitVec(name, width)
 
@@ -124,6 +122,7 @@ class InterpreterState:
 # Interpreter core
 # ---------------------------------------------------------------------------
 
+
 def interpret_ops(ops: list[Operation], state: InterpreterState) -> None:
     """Interpret a sequence of operations, mutating *state*."""
     from .dialects import dispatch
@@ -132,7 +131,9 @@ def interpret_ops(ops: list[Operation], state: InterpreterState) -> None:
         dispatch(op, state)
 
 
-def interpret_ttir(ir_text: str) -> tuple[dict[str, z3.ExprRef], set[str], InterpreterState]:
+def interpret_ttir(
+    ir_text: str,
+) -> tuple[dict[str, z3.ExprRef], set[str], InterpreterState]:
     """Parse and symbolically interpret a TTIR module.
 
     Returns ``(regs, terminals, state)`` where:
@@ -162,11 +163,12 @@ def interpret_ttir(ir_text: str) -> tuple[dict[str, z3.ExprRef], set[str], Inter
 # Expression chasing (deep substitution)
 # ---------------------------------------------------------------------------
 
+
 def deep_chase(
     expr: z3.ExprRef,
     regs: dict[str, z3.ExprRef],
     terminals: set[str],
-    max_depth: int = 20,
+    max_depth: int = 50,
 ) -> z3.ExprRef:
     """Repeatedly substitute non-terminal register definitions until only
     terminal symbols remain in *expr*.

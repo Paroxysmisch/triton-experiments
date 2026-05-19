@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 import z3
 
-from ..types import FloatType, make_z3_var
+from ..types import make_z3_var
 
 if TYPE_CHECKING:
     from ..interpreter import InterpreterState
@@ -58,6 +58,7 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
 # scf.for
 # ---------------------------------------------------------------------------
 
+
 def _handle_for(op: "Operation", state: "InterpreterState") -> None:
     """Execute the loop body once symbolically.
 
@@ -71,6 +72,7 @@ def _handle_for(op: "Operation", state: "InterpreterState") -> None:
     iv_name = op.attributes.get("iv")
     if iv_name:
         from ..types import IntegerType
+
         iv_type = op.result_types[0] if op.result_types else IntegerType(32)
         state.set(iv_name, make_z3_var(iv_name, iv_type), iv_type)
 
@@ -98,6 +100,7 @@ def _handle_for(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # scf.if
 # ---------------------------------------------------------------------------
+
 
 def _handle_if(op: "Operation", state: "InterpreterState") -> None:
     """Model both branches and combine with ``z3.If``."""
@@ -141,6 +144,7 @@ def _handle_if(op: "Operation", state: "InterpreterState") -> None:
 # scf.while
 # ---------------------------------------------------------------------------
 
+
 def _handle_while(op: "Operation", state: "InterpreterState") -> None:
     """Execute *before* region once; result is a fresh symbol."""
     from ..interpreter import interpret_ops
@@ -173,6 +177,7 @@ def _handle_while(op: "Operation", state: "InterpreterState") -> None:
 # scf.yield
 # ---------------------------------------------------------------------------
 
+
 def _handle_yield(op: "Operation", state: "InterpreterState") -> None:
     """Store yielded values for the parent op to pick up."""
     vals = [state.get(name) for name in op.operands]
@@ -182,6 +187,7 @@ def _handle_yield(op: "Operation", state: "InterpreterState") -> None:
 # ---------------------------------------------------------------------------
 # Less common SCF ops
 # ---------------------------------------------------------------------------
+
 
 def _handle_index_switch(op: "Operation", state: "InterpreterState") -> None:
     from ..interpreter import interpret_ops

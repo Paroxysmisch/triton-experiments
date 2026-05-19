@@ -12,6 +12,7 @@ import z3
 # MLIR type representations
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class IntegerType:
     width: int  # 1, 8, 16, 32, 64 ...
@@ -75,6 +76,7 @@ MLIRType = IntegerType | FloatType | BFloat16Type | IndexType | PointerType | Te
 # Type parsing
 # ---------------------------------------------------------------------------
 
+
 def parse_type(s: str) -> MLIRType:
     """Parse an MLIR type string into an MLIRType."""
     s = s.strip()
@@ -122,7 +124,7 @@ def _parse_tensor_inner(inner: str) -> TensorType:
         m = re.match(r"(\d+)x", rest)
         if m:
             parts.append(m.group(1))
-            rest = rest[m.end():]
+            rest = rest[m.end() :]
         else:
             break
     shape = tuple(int(p) for p in parts)
@@ -133,6 +135,7 @@ def _parse_tensor_inner(inner: str) -> TensorType:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def element_type(t: MLIRType) -> MLIRType:
     """Unwrap tensor / pointer to the scalar element type."""

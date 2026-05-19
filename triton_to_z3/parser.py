@@ -16,23 +16,25 @@ from .types import MLIRType, parse_type
 # AST nodes
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class Region:
     """A region body (e.g. the combiner inside tt.reduce, or a loop body)."""
+
     args: list[tuple[str, MLIRType]]  # block arguments: (name, type)
     body: list[Operation] = field(default_factory=list)
 
 
 @dataclass
 class Operation:
-    results: list[str]          # SSA result names (without %)
-    op: str                     # fully-qualified op name, e.g. "arith.addf"
-    operands: list[str]         # SSA operand names (without %)
+    results: list[str]  # SSA result names (without %)
+    op: str  # fully-qualified op name, e.g. "arith.addf"
+    operands: list[str]  # SSA operand names (without %)
     attributes: dict[str, str]  # parsed inline attributes
-    type_str: str               # raw result/operand type string
+    type_str: str  # raw result/operand type string
     result_types: list[MLIRType]
     regions: list[Region] = field(default_factory=list)
-    raw: str = ""               # original text for debugging
+    raw: str = ""  # original text for debugging
 
 
 @dataclass
@@ -46,13 +48,14 @@ class Function:
 # Location stripping
 # ---------------------------------------------------------------------------
 
+
 def strip_locations(text: str) -> str:
     """Remove all ``loc(...)`` annotations from MLIR text (handles nesting)."""
     result: list[str] = []
     i = 0
     n = len(text)
     while i < n:
-        if text[i:i + 5] == " loc(":
+        if text[i : i + 5] == " loc(":
             depth = 1
             j = i + 5
             while j < n and depth > 0:
@@ -92,6 +95,7 @@ def preprocess(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # Brace-aware block collector
 # ---------------------------------------------------------------------------
+
 
 def _net_braces(line: str) -> int:
     """Count unbalanced ``{`` / ``}`` ignoring attribute-dict ``<{…}>``."""
@@ -141,13 +145,11 @@ def collect_blocks(lines: list[str]) -> list[str]:
 # ---------------------------------------------------------------------------
 
 # Matches: %res = op ...  or  %r1, %r2 = op ...
-_RESULT_RE = re.compile(
-    r'^(?P<results>%[\w]+(?:\s*,\s*%[\w]+)*)\s*=\s*(?P<rest>.*)$'
-)
+_RESULT_RE = re.compile(r"^(?P<results>%[\w]+(?:\s*,\s*%[\w]+)*)\s*=\s*(?P<rest>.*)$")
 # Matches quoted op: "tt.reduce"(...)
 _QUOTED_OP_RE = re.compile(r'^"(?P<op>[^"]+)"\((?P<operands>[^)]*)\)\s*(?P<rest>.*)$')
 # Matches normal op: arith.addf %a, %b ...
-_NORMAL_OP_RE = re.compile(r'^(?P<op>[\w.]+)\s*(?P<rest>.*)$')
+_NORMAL_OP_RE = re.compile(r"^(?P<op>[\w.]+)\s*(?P<rest>.*)$")
 # Operand references
 _OPERAND_RE = re.compile(r"%(?P<name>\w+)")
 # Block argument:  %name: type
@@ -183,12 +185,14 @@ def _strip_attr_dicts(text: str) -> tuple[str, dict[str, str]]:
         body = m.group("body")
         if "=" in body and not body.strip().startswith("tt."):
             attrs.update(_parse_attributes(body))
+
     # Only strip inline attrs that look like key=value (not region bodies)
     def _replace_inline(m: re.Match[str]) -> str:
         body = m.group("body")
         if "=" in body and not body.strip().startswith("tt.") and "%" not in body:
             return ""
         return m.group(0)
+
     text = _INLINE_ATTR_RE.sub(_replace_inline, text)
 
     return text.strip(), attrs
@@ -265,6 +269,7 @@ _CONST_RE = re.compile(r"^(?P<value>.+)$")
 # ---------------------------------------------------------------------------
 # Main per-block parser
 # ---------------------------------------------------------------------------
+
 
 def parse_block_text(text: str) -> list[Operation]:
     """Parse a multi-line block of MLIR text into a list of Operations."""
@@ -353,7 +358,7 @@ def _parse_operation_block(text: str) -> Operation | None:
             attrs["lb"] = m_for.group("lb")
             attrs["ub"] = m_for.group("ub")
             attrs["step"] = m_for.group("step")
-            rest = rest[m_for.end():]
+            rest = rest[m_for.end() :]
 
     # 6. Parse type annotation
     rest_no_type, result_types = _parse_type_annotation(rest)
@@ -484,6 +489,7 @@ def parse_function_header(line: str) -> tuple[str, list[tuple[str, MLIRType]]]:
 # ---------------------------------------------------------------------------
 # Top-level parse entry point
 # ---------------------------------------------------------------------------
+
 
 def parse_ttir(text: str) -> Function | None:
     """Parse a TTIR module, returning the first ``tt.func`` as a Function."""
