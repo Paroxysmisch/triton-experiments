@@ -7,8 +7,10 @@ import importlib.util
 import io
 import json
 import math
+import shutil
 import subprocess
 import sys
+import tempfile
 import traceback
 from pathlib import Path
 from typing import Any
@@ -18,13 +20,19 @@ RESULT_GLOBALS = ("test_results", "result_gold", "results")
 
 
 def _run_stdout(path: Path, timeout: float) -> dict[str, Any]:
-    result = subprocess.run(
-        [sys.executable, str(path)],
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-        check=False,
-    )
+    # Run from an isolated temp directory so sibling generated files such as
+    # torch.py do not shadow real installed packages.
+    with tempfile.TemporaryDirectory(prefix="strict_io_stdout_") as tmp:
+        staged = Path(tmp) / "candidate_under_test.py"
+        shutil.copy2(path, staged)
+        result = subprocess.run(
+            [sys.executable, str(staged)],
+            cwd=tmp,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
     return {
         "returncode": result.returncode,
         "stdout": result.stdout,
@@ -56,13 +64,17 @@ def _seed_everything(seed: int) -> None:
 
 
 def _import_module(path: Path, timeout: float, seed: int) -> dict[str, Any]:
-    # Python has no safe in-process timeout for arbitrary CUDA code. The caller
-    # gets a timeout on the stdout subprocess path; this importer is intended
-    # for trusted local benchmark files after the stdout check has completed.
+    # Import from an isolated temp directory so sibling generated files such as
+    # torch.py do not shadow real installed packages.
     del timeout
+    tmp_ctx = tempfile.TemporaryDirectory(prefix="strict_io_import_")
+    tmp = Path(tmp_ctx.name)
+    staged = tmp / "candidate_under_test.py"
+    shutil.copy2(path, staged)
     module_name = f"_strict_io_{path.stem}_{abs(hash(path))}"
-    spec = importlib.util.spec_from_file_location(module_name, path)
+    spec = importlib.util.spec_from_file_location(module_name, staged)
     if spec is None or spec.loader is None:
+        tmp_ctx.cleanup()
         return {"ok": False, "error": f"cannot import {path}"}
     module = importlib.util.module_from_spec(spec)
     stdout = io.StringIO()
@@ -72,6 +84,7 @@ def _import_module(path: Path, timeout: float, seed: int) -> dict[str, Any]:
             _seed_everything(seed)
             spec.loader.exec_module(module)
     except BaseException:
+        tmp_ctx.cleanup()
         return {
             "ok": False,
             "stdout": stdout.getvalue(),
@@ -80,20 +93,24 @@ def _import_module(path: Path, timeout: float, seed: int) -> dict[str, Any]:
         }
     for name in RESULT_GLOBALS:
         if hasattr(module, name):
-            return {
+            result = {
                 "ok": True,
                 "result_name": name,
                 "result": getattr(module, name),
                 "stdout": stdout.getvalue(),
                 "stderr": stderr.getvalue(),
             }
-    return {
+            tmp_ctx.cleanup()
+            return result
+    result = {
         "ok": True,
         "result_name": None,
         "result": None,
         "stdout": stdout.getvalue(),
         "stderr": stderr.getvalue(),
     }
+    tmp_ctx.cleanup()
+    return result
 
 
 def _is_tensor(value: Any) -> bool:
