@@ -1,0 +1,36 @@
+FILE: data/TritonBench_G_v1/lightning_attention.py
+
+STDOUT:
+
+
+STDERR:
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/lightning_attention.py", line 508, in <module>
+    result_gold = test_lightning_attention2_no_decay()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/lightning_attention.py", line 493, in test_lightning_attention2_no_decay
+    o.sum().backward()  # 计算总和的梯度
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/autograd/__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/autograd/graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/autograd/function.py", line 307, in apply
+    return user_fn(self, *args)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/lightning_attention.py", line 427, in backward
+    _bwd_intra_kernel[grid](
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 691, in run
+    kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+    ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 381, in __getattribute__
+    self._init_handles()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 374, in _init_handles
+    raise OutOfResources(self.metadata.shared, max_shared, "shared memory")
+triton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 163840, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.

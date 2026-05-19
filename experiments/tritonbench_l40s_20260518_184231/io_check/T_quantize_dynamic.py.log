@@ -1,0 +1,72 @@
+FILE: data/TritonBench_T_v1/quantize_dynamic.py
+
+STDOUT:
+
+
+STDERR:
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/quantize_dynamic.py", line 69, in <module>
+    test_results = test_quantize_dynamic()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/quantize_dynamic.py", line 50, in test_quantize_dynamic
+    results["test_case_1"] = quantized_model_1(input_tensor)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_T_v1/quantize_dynamic.py", line 37, in forward
+    return self.fc(x)
+           ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/ao/nn/quantized/dynamic/modules/linear.py", line 57, in forward
+    Y = torch.ops.quantized.linear_dynamic(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/_ops.py", line 1116, in __call__
+    return self._op(*args, **(kwargs or {}))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NotImplementedError: Could not run 'quantized::linear_dynamic' with arguments from the 'CUDA' backend. This could be because the operator doesn't exist for this backend, or was omitted during the selective/custom build process (if using custom build). If you are a Facebook employee using PyTorch on mobile, please visit https://fburl.com/ptmfixes for possible resolutions. 'quantized::linear_dynamic' is only available for these backends: [CPU, Meta, BackendSelect, Python, FuncTorchDynamicLayerBackMode, Functionalize, Named, Conjugate, Negative, ZeroTensor, ADInplaceOrView, AutogradOther, AutogradCPU, AutogradCUDA, AutogradXLA, AutogradMPS, AutogradXPU, AutogradHPU, AutogradLazy, AutogradMeta, Tracer, AutocastCPU, AutocastXPU, AutocastMPS, AutocastCUDA, FuncTorchBatched, BatchedNestedTensor, FuncTorchVmapMode, Batched, VmapMode, FuncTorchGradWrapper, PythonTLSSnapshot, FuncTorchDynamicLayerFrontMode, PreDispatch, PythonDispatcher].
+
+CPU: registered at ../aten/src/ATen/native/quantized/cpu/qlinear_dynamic.cpp:791 [kernel]
+Meta: registered at ../aten/src/ATen/core/MetaFallbackKernel.cpp:23 [backend fallback]
+BackendSelect: fallthrough registered at ../aten/src/ATen/core/BackendSelectFallbackKernel.cpp:3 [backend fallback]
+Python: registered at ../aten/src/ATen/core/PythonFallbackKernel.cpp:153 [backend fallback]
+FuncTorchDynamicLayerBackMode: registered at ../aten/src/ATen/functorch/DynamicLayer.cpp:497 [backend fallback]
+Functionalize: registered at ../aten/src/ATen/FunctionalizeFallbackKernel.cpp:349 [backend fallback]
+Named: registered at ../aten/src/ATen/core/NamedRegistrations.cpp:7 [backend fallback]
+Conjugate: registered at ../aten/src/ATen/ConjugateFallback.cpp:17 [backend fallback]
+Negative: registered at ../aten/src/ATen/native/NegateFallback.cpp:18 [backend fallback]
+ZeroTensor: registered at ../aten/src/ATen/ZeroTensorFallback.cpp:86 [backend fallback]
+ADInplaceOrView: fallthrough registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:96 [backend fallback]
+AutogradOther: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:63 [backend fallback]
+AutogradCPU: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:67 [backend fallback]
+AutogradCUDA: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:75 [backend fallback]
+AutogradXLA: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:79 [backend fallback]
+AutogradMPS: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:87 [backend fallback]
+AutogradXPU: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:71 [backend fallback]
+AutogradHPU: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:100 [backend fallback]
+AutogradLazy: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:83 [backend fallback]
+AutogradMeta: registered at ../aten/src/ATen/core/VariableFallbackKernel.cpp:91 [backend fallback]
+Tracer: registered at ../torch/csrc/autograd/TraceTypeManual.cpp:294 [backend fallback]
+AutocastCPU: fallthrough registered at ../aten/src/ATen/autocast_mode.cpp:321 [backend fallback]
+AutocastXPU: fallthrough registered at ../aten/src/ATen/autocast_mode.cpp:463 [backend fallback]
+AutocastMPS: fallthrough registered at ../aten/src/ATen/autocast_mode.cpp:209 [backend fallback]
+AutocastCUDA: fallthrough registered at ../aten/src/ATen/autocast_mode.cpp:165 [backend fallback]
+FuncTorchBatched: registered at ../aten/src/ATen/functorch/LegacyBatchingRegistrations.cpp:731 [backend fallback]
+BatchedNestedTensor: registered at ../aten/src/ATen/functorch/LegacyBatchingRegistrations.cpp:758 [backend fallback]
+FuncTorchVmapMode: fallthrough registered at ../aten/src/ATen/functorch/VmapModeRegistrations.cpp:27 [backend fallback]
+Batched: registered at ../aten/src/ATen/LegacyBatchingRegistrations.cpp:1075 [backend fallback]
+VmapMode: fallthrough registered at ../aten/src/ATen/VmapModeRegistrations.cpp:33 [backend fallback]
+FuncTorchGradWrapper: registered at ../aten/src/ATen/functorch/TensorWrapper.cpp:207 [backend fallback]
+PythonTLSSnapshot: registered at ../aten/src/ATen/core/PythonFallbackKernel.cpp:161 [backend fallback]
+FuncTorchDynamicLayerFrontMode: registered at ../aten/src/ATen/functorch/DynamicLayer.cpp:493 [backend fallback]
+PreDispatch: registered at ../aten/src/ATen/core/PythonFallbackKernel.cpp:165 [backend fallback]
+PythonDispatcher: registered at ../aten/src/ATen/core/PythonFallbackKernel.cpp:157 [backend fallback]
+

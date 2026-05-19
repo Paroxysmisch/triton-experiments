@@ -1,0 +1,20 @@
+FILE: data/TritonBench_G_v1/token_attn_reduceV.py
+
+STDOUT:
+
+
+STDERR:
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/token_attn_reduceV.py", line 163, in <module>
+    result_gold = test_token_att_fwd2()
+                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/token_attn_reduceV.py", line 156, in test_token_att_fwd2
+    torch.cuda.synchronize()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 954, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: CUDA error: an illegal memory access was encountered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+

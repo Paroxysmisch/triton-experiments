@@ -1,0 +1,30 @@
+FILE: data/TritonBench_G_v1/streamk_matmul.py
+
+STDOUT:
+
+
+STDERR:
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/streamk_matmul.py", line 294, in <module>
+    result_gold = test_matmul()
+                  ^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/streamk_matmul.py", line 283, in test_matmul
+    c_triton_4 = matmul.forward(None, A, B, grid=4, BLK_M=256, BLK_N=256, BLK_K=32)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/streamk_matmul.py", line 258, in forward
+    return matmul._call(a=a, b=b, total_programs_streamk=grid, BLK_M=BLK_M, BLK_N=BLK_N, BLK_K=BLK_K, two_tiles=two_tiles, num_warps=num_warps, num_stages=num_stages)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/streamk_matmul.py", line 203, in _call
+    k1 = first_wave[(total_programs_streamk,)](
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 691, in run
+    kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+    ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 381, in __getattribute__
+    self._init_handles()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 374, in _init_handles
+    raise OutOfResources(self.metadata.shared, max_shared, "shared memory")
+triton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 131072, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.

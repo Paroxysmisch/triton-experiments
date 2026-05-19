@@ -1,0 +1,29 @@
+FILE: data/TritonBench_G_v1/attention_fwd_triton1.py
+
+STDOUT:
+
+
+STDERR:
+Traceback (most recent call last):
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_fwd_triton1.py", line 139, in <module>
+    result_gold = test_attention_fwd()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_fwd_triton1.py", line 102, in test_attention_fwd
+    result = AttentionFunction.apply(q, k, v)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/torch/autograd/function.py", line 575, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/data/TritonBench_G_v1/attention_fwd_triton1.py", line 78, in forward
+    attention_fwd_kernel[grid](
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 345, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 691, in run
+    kernel.run(grid_0, grid_1, grid_2, stream, kernel.function, kernel.packed_metadata, launch_metadata,
+    ^^^^^^^^^^
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 381, in __getattribute__
+    self._init_handles()
+  File "/home/mb2412/TritonBench/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 374, in _init_handles
+    raise OutOfResources(self.metadata.shared, max_shared, "shared memory")
+triton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 114688, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.
