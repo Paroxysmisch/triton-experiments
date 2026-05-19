@@ -67,10 +67,12 @@ def _handle_for(op: "Operation", state: "InterpreterState") -> None:
     """
     from ..interpreter import interpret_ops
 
-    # Induction variable
+    # Induction variable — use the for-loop's type or fall back to i32
     iv_name = op.attributes.get("iv")
     if iv_name:
-        state.set(iv_name, make_z3_var(iv_name, state.type_of(op.attributes.get("lb", "")) or FloatType(32)))
+        from ..types import IntegerType
+        iv_type = op.result_types[0] if op.result_types else IntegerType(32)
+        state.set(iv_name, make_z3_var(iv_name, iv_type), iv_type)
 
     # iter_args: in real MLIR these are extra operands mapped to region block
     # args.  For our symbolic model, we set them as fresh symbols.

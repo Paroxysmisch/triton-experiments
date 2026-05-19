@@ -14,14 +14,12 @@ if TYPE_CHECKING:
     from ..interpreter import InterpreterState
     from ..parser import Operation
 
-DIALECT_HANDLERS: dict[str, "HandleFn"] = {
+DIALECT_HANDLERS = {
     "arith": arith.handle,
     "math": math_ops.handle,
     "scf": scf.handle,
     "tt": triton.handle,
 }
-
-type HandleFn = type(arith.handle)
 
 
 def dispatch(op: "Operation", state: "InterpreterState") -> None:

@@ -17,7 +17,7 @@ from ..types import (
     IndexType,
     PointerType,
     TensorType,
-    element_type,
+    element_type as get_element_type,
     is_float_type,
     make_z3_var,
 )
@@ -159,16 +159,29 @@ def _handle_load(op: "Operation", state: "InterpreterState") -> None:
         return
     res = op.results[0]
 
-    # Determine element type from the pointer operand's type or result type
+    # The type annotation on tt.load is the *pointer* type, e.g.
+    # tensor<1024x!tt.ptr<f32>>.  The result type is the pointee.
     result_type = op.result_types[0] if op.result_types else None
-    if result_type:
-        etype = element_type(result_type)
-    else:
-        etype = FloatType(32)
+    etype = _load_element_type(result_type)
 
     sym = make_z3_var(f"load_{res}", etype)
     state.set(res, sym, result_type)
     state.terminals.add(res)
+
+
+def _load_element_type(t: "MLIRType | None") -> "MLIRType":
+    """Unwrap the pointer type from a tt.load type annotation to get the loaded element type."""
+    if t is None:
+        return FloatType(32)
+    match t:
+        case TensorType(element_type=PointerType(pointee=pt)):
+            return pt
+        case PointerType(pointee=pt):
+            return pt
+        case TensorType(element_type=et):
+            return get_element_type(et)
+        case _:
+            return get_element_type(t)
 
 
 def _handle_store(op: "Operation", state: "InterpreterState") -> None:
@@ -241,12 +254,25 @@ def _handle_make_range(op: "Operation", state: "InterpreterState") -> None:
 # Program ID / grid
 # ---------------------------------------------------------------------------
 
+def _extract_axis(op: "Operation") -> str:
+    """Extract axis keyword (x/y/z) from get_program_id / get_num_programs."""
+    # Check attributes first
+    axis = op.attributes.get("axis", "")
+    if axis in ("x", "y", "z"):
+        return axis
+    # Scan the raw text / type_str for a bare axis keyword
+    for text in (op.type_str, op.raw):
+        for candidate in ("x", "y", "z"):
+            if re.search(rf"\b{candidate}\b", text):
+                return candidate
+    return "x"
+
+
 def _handle_get_program_id(op: "Operation", state: "InterpreterState") -> None:
     if not op.results:
         return
     res = op.results[0]
-    # Determine axis from operands text or attribute
-    axis = op.attributes.get("axis", "x")
+    axis = _extract_axis(op)
     sym = z3.BitVec(f"program_id_{axis}", 32)
     state.set(res, sym, IntegerType(32))
     state.terminals.add(res)
@@ -256,7 +282,7 @@ def _handle_get_num_programs(op: "Operation", state: "InterpreterState") -> None
     if not op.results:
         return
     res = op.results[0]
-    axis = op.attributes.get("axis", "x")
+    axis = _extract_axis(op)
     sym = z3.BitVec(f"num_programs_{axis}", 32)
     state.set(res, sym, IntegerType(32))
     state.terminals.add(res)
@@ -321,7 +347,7 @@ def _handle_extern_elementwise(op: "Operation", state: "InterpreterState") -> No
     fn_name = _EXTERN_SYMBOL_MAP.get(sym_name, sym_name or f"extern_{res}")
 
     result_type = op.result_types[0] if op.result_types else None
-    etype = element_type(result_type) if result_type else FloatType(32)
+    etype = get_element_type(result_type) if result_type else FloatType(32)
     sort = etype.to_z3_sort()
 
     if len(op.operands) == 1:
@@ -383,7 +409,7 @@ def _handle_tt_cast(op: "Operation", state: "InterpreterState") -> None:
     result_type = op.result_types[0] if op.result_types else None
 
     if result_type:
-        etype = element_type(result_type)
+        etype = get_element_type(result_type)
         target_sort = etype.to_z3_sort()
         if isinstance(target_sort, z3.FPSortRef) and z3.is_fp(src):
             state.set(op.results[0], z3.fpToFP(z3.RNE(), src, target_sort), result_type)

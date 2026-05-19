@@ -86,6 +86,8 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
         # --- integer extended arithmetic ---------------------------------
         case "addui_extended":
             _extended_add(op, state)
+        case "subui_extended":
+            _extended_sub(op, state)
         case "mulsi_extended" | "mului_extended":
             _extended_mul(op, state, signed=(name == "mulsi_extended"))
 
@@ -342,6 +344,17 @@ def _extended_add(op: "Operation", state: "InterpreterState") -> None:
     full = ext_l + ext_r
     state.set(op.results[0], z3.Extract(w - 1, 0, full))
     state.set(op.results[1], z3.Extract(w, w, full) == z3.BitVecVal(1, 1))
+
+
+def _extended_sub(op: "Operation", state: "InterpreterState") -> None:
+    if len(op.operands) < 2 or len(op.results) < 2:
+        return
+    lhs = state.get_bv(op.operands[0])
+    rhs = state.get_bv(op.operands[1])
+    lhs, rhs = _match_bv_widths(lhs, rhs)
+    w = lhs.size()
+    state.set(op.results[0], lhs - rhs)
+    state.set(op.results[1], z3.UGT(rhs, lhs))  # borrow if rhs > lhs (unsigned)
 
 
 def _extended_mul(op: "Operation", state: "InterpreterState", *, signed: bool) -> None:

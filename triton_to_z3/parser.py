@@ -385,34 +385,52 @@ def _parse_operation_block(text: str) -> Operation | None:
 
 
 def _extract_regions(body_lines: list[str]) -> tuple[list[Region], list[str]]:
-    """Extract Region objects from body lines of a multi-line operation."""
-    regions: list[Region] = []
-    remaining: list[str] = []
+    """Extract Region objects from body lines of a multi-line operation.
 
-    # Collect all inner lines (strip closing markers)
+    Properly tracks brace depth so that nested regions (e.g. tt.reduce
+    inside scf.for) don't prematurely close the outer region.
+    """
+    regions: list[Region] = []
     inner_lines: list[str] = []
+    depth = 0  # nesting depth within this region
+
     for line in body_lines:
         stripped = line.strip()
-        # Closing markers
-        if stripped.startswith("})") or stripped == "}" or stripped.startswith("} {"):
-            # Check for "} else {" pattern
+        braces = _net_braces(stripped)
+
+        # Check if this line closes the current top-level region
+        # (depth would go negative → we're exiting our scope)
+        if depth + braces < 0:
+            # Region closer at our level
             if "else" in stripped:
-                # End current region, start a new one
+                # "} else {" – finish current region, start a new one
                 if inner_lines:
                     regions.append(_build_region(inner_lines))
                     inner_lines = []
+                depth = 0
                 continue
-            # Normal close: end region
+            # Normal close: }) ... or } ...
+            if inner_lines:
+                regions.append(_build_region(inner_lines))
+                inner_lines = []
+            depth = 0
+            continue
+
+        # If depth is 0 and braces == 0 and the line is just "}" or "})"
+        # this also closes the region
+        if depth == 0 and braces == 0 and stripped in ("}", "})"):
             if inner_lines:
                 regions.append(_build_region(inner_lines))
                 inner_lines = []
             continue
+
         inner_lines.append(stripped)
+        depth += braces
 
     if inner_lines:
         regions.append(_build_region(inner_lines))
 
-    return regions, remaining
+    return regions, []
 
 
 def _build_region(lines: list[str]) -> Region:
