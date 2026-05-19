@@ -1,0 +1,1 @@
+The given code snippet demonstrates a triton language implementation where the `rotary_kernel` performs rotary positional encoding on an input matrix. The `apply_rotary` function wraps this kernel, preparing the input data and launching the rotary kernel on the GPU.

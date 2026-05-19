@@ -1,0 +1,1 @@
+The above explanation is not a detailed task, instead it is a concise description of the task you want to achieve. To provide a detailed solution please provide more specific instructions about the inputs, outputs, sequence lens, scaling factors, block counts, offsets, and other parameters. Also, please clarify how the kernel should perform attention with dense and sparse inputs.

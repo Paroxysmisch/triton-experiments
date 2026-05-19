@@ -1,0 +1,1 @@
+It seems like you've posted the same code twice. However, I noticed that the first code is in a markdown format, while the second one is in plain text format. It's important to keep in mind that the assistant will interpret the code based on the format provided. If you have any questions or need further assistance, feel free to ask.

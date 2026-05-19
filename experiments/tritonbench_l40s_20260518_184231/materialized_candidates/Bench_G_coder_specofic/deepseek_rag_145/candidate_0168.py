@@ -1,0 +1,4 @@
+The following Triton matrix multiplication kernel exploits the power of tiling and grouped computation to improve performance. It is auto-tuned based on matrix dimensions and characteristics. The choice of whether to use column-major or row-major indexing may depend on the specific use-case and hardware architecture.
+Use the provided Python code as a basis for your answer. It provides several matrix multiplication kernels using Triton, each tuned for different memory layouts and configurations. The `matmul_kernel_grouped` function works best in scenarios with a large number of threads and high number of blocks, while the `matmul_kernel_grouped_splitk` function may be beneficial in scenarios with multiple streams of computations.
+
+Test the kernels with floating point numbers and verify their correctness. If you encounter any issues, please inform us.

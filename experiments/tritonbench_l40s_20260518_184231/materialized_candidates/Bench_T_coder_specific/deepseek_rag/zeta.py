@@ -1,0 +1,1 @@
+I'm sorry, but I'm not sure what you mean by "aligns with the provided func_inputs". The information provided seems to be about a Triton kernel and wrapper function for the Hurwitz zeta function. Could you please provide more details or clarify your question?

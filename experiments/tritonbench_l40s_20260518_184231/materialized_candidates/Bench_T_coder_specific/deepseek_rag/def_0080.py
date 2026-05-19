@@ -1,0 +1,1 @@
+I'm sorry, but your request is not clear. Are you asking for a Triton wrapper function for the linear system solving `Ax = b` using QR decomposition, or are you asking for a Triton kernel function to compute the cosine of each element in a given tensor? Please provide more details so I can assist you better.

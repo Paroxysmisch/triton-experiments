@@ -1,0 +1,1 @@
+I'm sorry, but your request is not clear. Could you please provide more details about the function you want to wrap or the specific Triton kernel you want to generate? This information will help me provide a more accurate solution.

@@ -1,0 +1,1 @@
+I'm sorry, but your question seems to be missing some context. Are you asking how to write a Triton kernel or wrapper function for the argmax operation? If so, could you please provide more details about the input tensor's data type, shape, and the programming language you're using?

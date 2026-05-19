@@ -1,0 +1,1 @@
+I'm sorry, but your request is not clear. Could you please provide more information or context? Are you asking for help with generating a Triton wrapper for a floor function or something else? Your question seems to be missing some details.

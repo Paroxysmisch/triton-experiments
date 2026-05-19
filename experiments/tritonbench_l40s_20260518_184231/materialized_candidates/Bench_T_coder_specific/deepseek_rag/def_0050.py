@@ -1,0 +1,1 @@
+I'm sorry, but your question seems to be missing some context or code. Could you please provide more details or code related to the Triton programming and the functional description you want to implement? I'm here to help with any programming-related questions or tasks.
