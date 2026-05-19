@@ -1,3 +1,5 @@
+import os
+
 import torch
 import triton
 import triton.language as tl
@@ -371,6 +373,7 @@ if __name__ == "__main__":
 
     torch.manual_seed(0)
     x = torch.randn(1823, 781, device=DEVICE)
-    y_triton = softmax(x)
-    y_torch = torch.softmax(x, axis=1)
+    y = torch.randn(781, 200, device=DEVICE)
+    y_triton = matmul(x, y)
+    y_torch = torch.matmul(x, y)
     assert torch.allclose(y_triton, y_torch), (y_triton, y_torch)
