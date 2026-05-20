@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from . import arith, math_ops, scf, triton
+from . import arith, math_ops, scf, triton, triton_gpu
 
 if TYPE_CHECKING:
     from ..interpreter import InterpreterState
@@ -19,6 +19,7 @@ DIALECT_HANDLERS = {
     "math": math_ops.handle,
     "scf": scf.handle,
     "tt": triton.handle,
+    "ttg": triton_gpu.handle,
 }
 
 
