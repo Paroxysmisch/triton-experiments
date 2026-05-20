@@ -72,13 +72,29 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
             _handle_load(op, state)
         case "store":
             _handle_store(op, state)
+        case "descriptor_load":
+            _handle_descriptor_load(op, state)
+        case "descriptor_gather":
+            _handle_descriptor_load(op, state)
+        case "descriptor_store":
+            _handle_descriptor_store(op, state)
+        case "descriptor_scatter":
+            _handle_descriptor_store(op, state)
+        case "descriptor_reduce":
+            _handle_descriptor_store(op, state)
 
         # --- Pointer arithmetic ------------------------------------------
         case "addptr":
             _handle_addptr(op, state)
+        case "int_to_ptr":
+            _handle_alias(op, state)
+        case "ptr_to_int":
+            _handle_alias(op, state)
 
         # --- Shape / broadcast / splat -----------------------------------
         case "splat":
+            _handle_alias(op, state)
+        case "unsplat":
             _handle_alias(op, state)
         case "broadcast":
             _handle_alias(op, state)
@@ -88,10 +104,16 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
             _handle_alias(op, state)
         case "cat":
             _handle_alias(op, state)
+        case "join":
+            _handle_alias(op, state)
+        case "split":
+            _handle_split(op, state)
         case "trans":
             _handle_alias(op, state)
         case "make_tensor_ptr":
             _handle_make_tensor_ptr(op, state)
+        case "make_tensor_descriptor":
+            _handle_make_tensor_descriptor(op, state)
         case "advance":
             _handle_alias(op, state)
 
@@ -105,20 +127,42 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
         case "get_num_programs":
             _handle_get_num_programs(op, state)
 
-        # --- Reductions --------------------------------------------------
+        # --- Reductions / scans ------------------------------------------
         case "reduce":
             _handle_reduce(op, state)
         case "reduce.return":
             _handle_reduce_return(op, state)
         case "scan":
             _handle_scan(op, state)
+        case "scan.return":
+            pass  # Consumed by scan handler
+        case "histogram":
+            _handle_histogram(op, state)
 
-        # --- Extern elementwise ------------------------------------------
+        # --- Elementwise operations --------------------------------------
         case "extern_elementwise":
             _handle_extern_elementwise(op, state)
+        case "elementwise_inline_asm":
+            _handle_inline_asm(op, state)
+        case "clampf":
+            _handle_clampf(op, state)
+        case "precise_divf":
+            _handle_precise_divf(op, state)
+        case "precise_sqrt":
+            _handle_precise_sqrt(op, state)
+        case "mulhiui":
+            _handle_mulhiui(op, state)
+        case "gather":
+            _handle_gather(op, state)
+        case "map_elementwise":
+            _handle_map_elementwise(op, state)
+        case "map_elementwise.return":
+            _handle_map_elementwise_return(op, state)
 
         # --- Dot product (matmul) ----------------------------------------
         case "dot":
+            _handle_dot(op, state)
+        case "dot_scaled":
             _handle_dot(op, state)
 
         # --- Atomic operations -------------------------------------------
@@ -140,7 +184,11 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
             pass
         case "call":
             _handle_call(op, state)
+
+        # --- Side-effect only (no data flow) -----------------------------
         case "print":
+            pass
+        case "assert":
             pass
 
         # --- Fallback ----------------------------------------------------
@@ -466,3 +514,181 @@ def _handle_make_tensor_ptr(op: "Operation", state: "InterpreterState") -> None:
         state.set(op.results[0], state.get(op.operands[0]))
     else:
         state.set(res, z3.BitVec(f"tensor_ptr_{res}", 64))
+
+
+def _handle_make_tensor_descriptor(op: "Operation", state: "InterpreterState") -> None:
+    """tt.make_tensor_descriptor — creates a TMA descriptor from a base pointer."""
+    if not op.results:
+        return
+    res = op.results[0]
+    if op.operands:
+        state.set(res, state.get(op.operands[0]))
+    else:
+        state.set(res, z3.BitVec(f"tensor_desc_{res}", 64))
+
+
+# ---------------------------------------------------------------------------
+# Descriptor (TMA) memory operations
+# ---------------------------------------------------------------------------
+
+
+def _handle_descriptor_load(op: "Operation", state: "InterpreterState") -> None:
+    """tt.descriptor_load / tt.descriptor_gather — TMA load, fresh terminal."""
+    if not op.results:
+        return
+    res = op.results[0]
+    result_type = op.result_types[0] if op.result_types else None
+    etype = get_element_type(result_type) if result_type else FloatType(32)
+    sym = make_z3_var(f"desc_load_{res}", etype)
+    state.set(res, sym, result_type)
+    state.terminals.add(res)
+
+
+def _handle_descriptor_store(op: "Operation", state: "InterpreterState") -> None:
+    """tt.descriptor_store / descriptor_scatter / descriptor_reduce — TMA store side-effect."""
+    # The src tensor is the last operand in all three variants
+    if len(op.operands) >= 2:
+        state.stores.append((op.operands[0], op.operands[-1]))
+
+
+# ---------------------------------------------------------------------------
+# Split (two results from one input)
+# ---------------------------------------------------------------------------
+
+
+def _handle_split(op: "Operation", state: "InterpreterState") -> None:
+    """tt.split — splits tensor along last dim into two halves.
+    Symbolically both halves alias the source."""
+    if not op.operands:
+        return
+    src = state.get(op.operands[0])
+    for res in op.results:
+        state.set(res, src)
+
+
+# ---------------------------------------------------------------------------
+# Elementwise: clampf, precise_divf, precise_sqrt, mulhiui, gather
+# ---------------------------------------------------------------------------
+
+
+def _handle_clampf(op: "Operation", state: "InterpreterState") -> None:
+    """tt.clampf %x, %min, %max — clamp(x, min, max)."""
+    if len(op.operands) < 3 or not op.results:
+        return
+    x = state.get_fp(op.operands[0])
+    mn = state.get_fp(op.operands[1])
+    mx = state.get_fp(op.operands[2])
+    # clamp = max(min(x, max_val), min_val)
+    clamped = z3.If(z3.fpLT(x, mn), mn, z3.If(z3.fpGT(x, mx), mx, x))
+    result_type = op.result_types[0] if op.result_types else None
+    state.set(op.results[0], clamped, result_type)
+
+
+def _handle_precise_divf(op: "Operation", state: "InterpreterState") -> None:
+    """tt.precise_divf — same semantics as arith.divf (IEEE-correct division)."""
+    if len(op.operands) < 2 or not op.results:
+        return
+    lhs = state.get_fp(op.operands[0])
+    rhs = state.get_fp(op.operands[1])
+    result_type = op.result_types[0] if op.result_types else None
+    state.set(op.results[0], z3.fpDiv(z3.RNE(), lhs, rhs), result_type)
+
+
+def _handle_precise_sqrt(op: "Operation", state: "InterpreterState") -> None:
+    """tt.precise_sqrt — IEEE-correct square root."""
+    if not op.operands or not op.results:
+        return
+    arg = state.get_fp(op.operands[0])
+    result_type = op.result_types[0] if op.result_types else None
+    state.set(op.results[0], z3.fpSqrt(z3.RNE(), arg), result_type)
+
+
+def _handle_mulhiui(op: "Operation", state: "InterpreterState") -> None:
+    """tt.mulhiui %x, %y — upper N bits of 2N-bit unsigned product."""
+    if len(op.operands) < 2 or not op.results:
+        return
+    x = state.get_bv(op.operands[0])
+    y = state.get_bv(op.operands[1])
+    if z3.is_bv(x) and z3.is_bv(y):
+        w = x.size()
+        full = z3.ZeroExt(w, x) * z3.ZeroExt(w, y)
+        result_type = op.result_types[0] if op.result_types else None
+        state.set(op.results[0], z3.Extract(2 * w - 1, w, full), result_type)
+    else:
+        state.set_unknown(op.results[0], "mulhiui")
+
+
+def _handle_gather(op: "Operation", state: "InterpreterState") -> None:
+    """tt.gather %src[%indices] — index into src along an axis.
+    Symbolically the result depends on the source, modelled as a fresh terminal."""
+    if not op.results:
+        return
+    res = op.results[0]
+    result_type = op.result_types[0] if op.result_types else None
+    etype = get_element_type(result_type) if result_type else FloatType(32)
+    sym = make_z3_var(f"gather_{res}", etype)
+    state.set(res, sym, result_type)
+    state.terminals.add(res)
+
+
+def _handle_histogram(op: "Operation", state: "InterpreterState") -> None:
+    """tt.histogram — returns bin counts; result is a fresh terminal."""
+    if not op.results:
+        return
+    res = op.results[0]
+    result_type = op.result_types[0] if op.result_types else IntegerType(32)
+    sym = make_z3_var(f"histogram_{res}", result_type)
+    state.set(res, sym, result_type)
+    state.terminals.add(res)
+
+
+# ---------------------------------------------------------------------------
+# Inline assembly
+# ---------------------------------------------------------------------------
+
+
+def _handle_inline_asm(op: "Operation", state: "InterpreterState") -> None:
+    """tt.elementwise_inline_asm — opaque; each result is a fresh symbol."""
+    for i, res in enumerate(op.results):
+        rt = op.result_types[i] if i < len(op.result_types) else None
+        etype = get_element_type(rt) if rt else FloatType(32)
+        sym = make_z3_var(f"asm_{res}", etype)
+        state.set(res, sym, rt)
+        state.terminals.add(res)
+
+
+# ---------------------------------------------------------------------------
+# Map elementwise (region-bearing)
+# ---------------------------------------------------------------------------
+
+
+def _handle_map_elementwise(op: "Operation", state: "InterpreterState") -> None:
+    """tt.map_elementwise — apply a scalar subregion over tensors.
+    Execute the region once symbolically (same as reduce strategy)."""
+    from ..interpreter import interpret_ops
+
+    if op.regions:
+        region = op.regions[0]
+        # Bind region block args to the input operands
+        for idx, (arg_name, arg_type) in enumerate(region.args):
+            if idx < len(op.operands):
+                state.set(arg_name, state.get(op.operands[idx]), arg_type)
+            else:
+                state.set(arg_name, make_z3_var(arg_name, arg_type), arg_type)
+        interpret_ops(region.body, state)
+
+    # Collect yielded values
+    yield_vals = state.pop_yield()
+    for i, res in enumerate(op.results):
+        if i < len(yield_vals):
+            state.set(res, yield_vals[i])
+        else:
+            state.set_unknown(res, "map_elementwise_result")
+
+
+def _handle_map_elementwise_return(op: "Operation", state: "InterpreterState") -> None:
+    """Terminator for tt.map_elementwise — push values for parent."""
+    vals = [state.get(name) for name in op.operands]
+    state.push_yield(vals)
+
+
