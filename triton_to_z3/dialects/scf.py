@@ -62,9 +62,10 @@ def handle(op: "Operation", state: "InterpreterState") -> None:
 def _handle_for(op: "Operation", state: "InterpreterState") -> None:
     """Execute the loop body once symbolically.
 
-    The induction variable and any iter_args are modelled as fresh symbols.
-    After executing the body, the yielded values (if any) are propagated to
-    the for-op's results.
+    The induction variable is a fresh symbol.  ``iter_args`` map initial
+    values to region block arguments so the body can reference them.
+    After executing the body, the yielded values are propagated to the
+    for-op's result names (e.g. ``accumulator_32#0``, ``#1``, ``#2``).
     """
     from ..interpreter import interpret_ops
 
@@ -76,12 +77,18 @@ def _handle_for(op: "Operation", state: "InterpreterState") -> None:
         iv_type = op.result_types[0] if op.result_types else IntegerType(32)
         state.set(iv_name, make_z3_var(iv_name, iv_type), iv_type)
 
-    # iter_args: in real MLIR these are extra operands mapped to region block
-    # args.  For our symbolic model, we set them as fresh symbols.
+    # iter_args: bind each block argument to its initial value.
+    # The parser stores these as [("block_arg", "init_value"), ...].
+    iter_args: list[tuple[str, str]] = op.attributes.get("iter_args", [])
+    for arg_name, init_name in iter_args:
+        state.set(arg_name, state.get(init_name), state.type_of(init_name))
+
     if op.regions:
         region = op.regions[0]
+        # For any region block args NOT covered by iter_args, create fresh symbols
+        covered = {a for a, _ in iter_args}
         for arg_name, arg_type in region.args:
-            if not state.has(arg_name):
+            if arg_name not in covered and not state.has(arg_name):
                 state.set(arg_name, make_z3_var(arg_name, arg_type), arg_type)
 
         # Execute body

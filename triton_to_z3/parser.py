@@ -144,14 +144,16 @@ def collect_blocks(lines: list[str]) -> list[str]:
 # Single-operation line parser
 # ---------------------------------------------------------------------------
 
-# Matches: %res = op ...  or  %r1, %r2 = op ...
-_RESULT_RE = re.compile(r"^(?P<results>%[\w]+(?:\s*,\s*%[\w]+)*)\s*=\s*(?P<rest>.*)$")
+# Matches: %res = op ...  or  %r1, %r2 = op ...  or  %res:3 = op ... (multi-result)
+_RESULT_RE = re.compile(
+    r"^(?P<results>%[\w]+(?::\d+)?(?:\s*,\s*%[\w]+(?::\d+)?)*)\s*=\s*(?P<rest>.*)$"
+)
 # Matches quoted op: "tt.reduce"(...)
 _QUOTED_OP_RE = re.compile(r'^"(?P<op>[^"]+)"\((?P<operands>[^)]*)\)\s*(?P<rest>.*)$')
 # Matches normal op: arith.addf %a, %b ...
 _NORMAL_OP_RE = re.compile(r"^(?P<op>[\w.]+)\s*(?P<rest>.*)$")
-# Operand references
-_OPERAND_RE = re.compile(r"%(?P<name>\w+)")
+# Operand references: %name or %name#N (multi-result index)
+_OPERAND_RE = re.compile(r"%(?P<name>\w+(?:#\d+)?)")
 # Block argument:  %name: type
 _BLOCK_ARG_RE = re.compile(r"%(?P<name>\w+)\s*:\s*(?P<type>[^,)]+)")
 # Attribute dict <{...}>
@@ -258,10 +260,12 @@ def _extract_operands(text: str) -> list[str]:
 
 # arith.cmpi slt, %a, %b  or  arith.cmpf ogt, %a, %b
 _CMP_RE = re.compile(r"^(?P<pred>\w+)\s*,\s*(?P<rest>.*)$")
-# scf.for %iv = %lb to %ub step %st
+# scf.for %iv = %lb to %ub step %st [iter_args(...)]
 _FOR_RE = re.compile(
     r"^%(?P<iv>\w+)\s*=\s*%(?P<lb>\w+)\s+to\s+%(?P<ub>\w+)\s+step\s+%(?P<step>\w+)"
 )
+# iter_args(%block_arg = %init, ...)
+_ITER_ARGS_RE = re.compile(r"iter_args\((?P<body>[^)]+)\)")
 # arith.constant value : type
 _CONST_RE = re.compile(r"^(?P<value>.+)$")
 
@@ -320,7 +324,18 @@ def _parse_operation_block(text: str) -> Operation | None:
     rest = header_line
     m = _RESULT_RE.match(rest)
     if m:
-        results = [r.strip().lstrip("%") for r in m.group("results").split(",")]
+        for r in m.group("results").split(","):
+            r = r.strip().lstrip("%")
+            # Handle %name:N multi-result syntax → name#0, name#1, ..., name#(N-1)
+            if ":" in r:
+                name, count_str = r.rsplit(":", 1)
+                if count_str.isdigit():
+                    for i in range(int(count_str)):
+                        results.append(f"{name}#{i}")
+                else:
+                    results.append(r)
+            else:
+                results.append(r)
         rest = m.group("rest")
 
     # 2. Extract op name
@@ -359,6 +374,19 @@ def _parse_operation_block(text: str) -> Operation | None:
             attrs["ub"] = m_for.group("ub")
             attrs["step"] = m_for.group("step")
             rest = rest[m_for.end() :]
+        # Parse iter_args(%block_arg = %init, ...)
+        m_iter = _ITER_ARGS_RE.search(rest)
+        if m_iter:
+            iter_pairs: list[tuple[str, str]] = []
+            for part in m_iter.group("body").split(","):
+                part = part.strip()
+                if "=" in part:
+                    lhs, rhs = part.split("=", 1)
+                    arg_name = lhs.strip().lstrip("%")
+                    init_name = rhs.strip().lstrip("%")
+                    iter_pairs.append((arg_name, init_name))
+            attrs["iter_args"] = iter_pairs
+            rest = rest[: m_iter.start()] + rest[m_iter.end() :]
 
     # 6. Parse type annotation
     rest_no_type, result_types = _parse_type_annotation(rest)
