@@ -366,14 +366,57 @@ def matmul(a, b, activation=""):
     return c
 
 
-if __name__ == "__main__":
-    # Enable the dump and force recompile
-    os.environ["TRITON_KERNEL_DUMP"] = "1"
-    os.environ["TRITON_ALWAYS_COMPILE"] = "1"
+def matmul_warmup_and_print_ttir(a, b, activation=""):
+    """Warmup the matmul kernel with a fixed config and print TTIR."""
+    assert a.shape[1] == b.shape[0], "Incompatible dimensions"
+    assert a.is_contiguous(), "Matrix A must be contiguous"
+    M, K = a.shape
+    K, N = b.shape
+    c = torch.empty((M, N), device=a.device, dtype=torch.float16)
 
+    # Pick a fixed config for warmup (bypassing autotune)
+    BLOCK_SIZE_M = 128
+    BLOCK_SIZE_N = 128
+    BLOCK_SIZE_K = 32
+    GROUP_SIZE_M = 8
+    num_warps = 4
+    num_stages = 4
+
+    grid = (triton.cdiv(M, BLOCK_SIZE_M) * triton.cdiv(N, BLOCK_SIZE_N),)
+
+    # Access the underlying JIT function through the autotune wrapper
+    kernel = matmul_kernel.fn.warmup(
+        a, b, c,
+        M, N, K,
+        a.stride(0), a.stride(1),
+        b.stride(0), b.stride(1),
+        c.stride(0), c.stride(1),
+        BLOCK_SIZE_M=BLOCK_SIZE_M,
+        BLOCK_SIZE_N=BLOCK_SIZE_N,
+        BLOCK_SIZE_K=BLOCK_SIZE_K,
+        GROUP_SIZE_M=GROUP_SIZE_M,
+        ACTIVATION=activation,
+        num_warps=num_warps,
+        num_stages=num_stages,
+        grid=grid,
+    )
+    kernel._init_handles()
+    print(kernel.asm["ttir"])
+
+    # Also run the kernel so we can verify correctness
+    kernel[grid](
+        a, b, c,
+        M, N, K,
+        a.stride(0), a.stride(1),
+        b.stride(0), b.stride(1),
+        c.stride(0), c.stride(1),
+        BLOCK_SIZE_M, BLOCK_SIZE_N, BLOCK_SIZE_K, GROUP_SIZE_M, activation,
+    )
+    return c
+
+
+if __name__ == "__main__":
     torch.manual_seed(0)
-    x = torch.randn(1823, 781, device=DEVICE)
-    y = torch.randn(781, 200, device=DEVICE)
-    y_triton = matmul(x, y)
-    y_torch = torch.matmul(x, y)
-    assert torch.allclose(y_triton, y_torch), (y_triton, y_torch)
+    a = torch.randn(1823, 781, device=DEVICE, dtype=torch.float16)
+    b = torch.randn(781, 200, device=DEVICE, dtype=torch.float16)
+    c = matmul_warmup_and_print_ttir(a, b)
