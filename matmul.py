@@ -403,15 +403,8 @@ def matmul_warmup_and_print_ttir(a, b, activation=""):
     kernel._init_handles()
     print(kernel.asm["ttir"])
 
-    # Also run the kernel so we can verify correctness
-    kernel[grid](
-        a, b, c,
-        M, N, K,
-        a.stride(0), a.stride(1),
-        b.stride(0), b.stride(1),
-        c.stride(0), c.stride(1),
-        BLOCK_SIZE_M, BLOCK_SIZE_N, BLOCK_SIZE_K, GROUP_SIZE_M, activation,
-    )
+    # Run via the autotuned path for correctness verification
+    c = matmul(a, b, activation=activation)
     return c
 
 
@@ -420,3 +413,6 @@ if __name__ == "__main__":
     a = torch.randn(1823, 781, device=DEVICE, dtype=torch.float16)
     b = torch.randn(781, 200, device=DEVICE, dtype=torch.float16)
     c = matmul_warmup_and_print_ttir(a, b)
+    c_ref = torch.matmul(a, b)
+    assert torch.allclose(c, c_ref, atol=1e-2, rtol=1e-2), "Mismatch!"
+    print("Correctness verified against torch.matmul")
