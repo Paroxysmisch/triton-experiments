@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +58,29 @@ def _case_record(case: Any, candidates: list[Path], repo_root: Path) -> dict[str
     }
 
 
+def _progress(items: list[tuple[Any, Path]], enabled: bool) -> Any:
+    if not enabled:
+        return items
+    try:
+        from tqdm import tqdm
+
+        return tqdm(items, desc="strict IO checks", unit="candidate")
+    except ImportError:
+        total = len(items)
+
+        def _fallback() -> Any:
+            for index, item in enumerate(items, 1):
+                if index == 1 or index == total or index % 10 == 0:
+                    print(
+                        f"strict IO checks: {index}/{total} candidates",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                yield item
+
+        return _fallback()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run strict I/O checks on L40S weak-oracle speedup candidates.")
     parser.add_argument("--repo-root", required=True, type=Path)
@@ -80,6 +104,11 @@ def main() -> int:
         "--print-full-report",
         action="store_true",
         help="Print the complete JSON report to stdout. By default, --out gets the full report and stdout gets a compact summary.",
+    )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Disable tqdm-style progress output while running comparisons.",
     )
     args = parser.parse_args()
 
@@ -113,15 +142,17 @@ def main() -> int:
         "results": [],
     }
 
+    jobs: list[tuple[Any, Path]] = []
     for case in cases:
         candidates = _find_candidates(materialized_root, case.channel, case.name)
         if args.max_candidates_per_case > 0:
             candidates = candidates[: args.max_candidates_per_case]
         report["cases"].append(_case_record(case, candidates, repo_root))
-        if args.dry_run:
-            continue
-        reference = _reference_path(repo_root, case.channel, case.name)
-        for candidate in candidates:
+        jobs.extend((case, candidate) for candidate in candidates)
+
+    if not args.dry_run:
+        for case, candidate in _progress(jobs, enabled=not args.no_progress):
+            reference = _reference_path(repo_root, case.channel, case.name)
             result = compare(candidate, reference, args.timeout, args.seed)
             result.update(
                 {
