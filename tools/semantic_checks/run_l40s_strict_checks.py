@@ -76,6 +76,11 @@ def main() -> int:
     parser.add_argument("--timeout", default=120.0, type=float)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--max-candidates-per-case", default=0, type=int)
+    parser.add_argument(
+        "--print-full-report",
+        action="store_true",
+        help="Print the complete JSON report to stdout. By default, --out gets the full report and stdout gets a compact summary.",
+    )
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
@@ -142,7 +147,26 @@ def main() -> int:
     text = json.dumps(report, indent=2)
     if args.out:
         args.out.write_text(text + "\n", encoding="utf-8")
-    print(text)
+    summary = {
+        "repo_root": report["repo_root"],
+        "selection_repo_root": report["selection_repo_root"],
+        "run_dir": report["run_dir"],
+        "materialized_root": report["materialized_root"],
+        "seed": report["seed"],
+        "timeout": report["timeout"],
+        "dry_run": report["dry_run"],
+        "case_count": report["case_count"],
+        "candidate_total": sum(case["candidate_count"] for case in report["cases"]),
+        "result_count": len(report["results"]),
+        "stdout_false_positive_count": report.get("stdout_false_positive_count"),
+        "strict_fail_count": report.get("strict_fail_count"),
+        "import_error_count": report.get("import_error_count"),
+        "strict_pass_count": sum(
+            1 for result in report["results"] if result.get("strict_status") == "pass"
+        ),
+        "out": str(args.out) if args.out else None,
+    }
+    print(text if args.print_full_report else json.dumps(summary, indent=2))
     return 0
 
 
