@@ -60,6 +60,15 @@ def _case_record(case: Any, candidates: list[Path], repo_root: Path) -> dict[str
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run strict I/O checks on L40S weak-oracle speedup candidates.")
     parser.add_argument("--repo-root", required=True, type=Path)
+    parser.add_argument(
+        "--selection-repo-root",
+        type=Path,
+        help=(
+            "Repository root used only for selecting weak-oracle cases. "
+            "This should point at the original sources when --repo-root points "
+            "at hardened reference files."
+        ),
+    )
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--materialized-root", type=Path)
     parser.add_argument("--out", type=Path)
@@ -70,6 +79,11 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
+    selection_repo_root = (
+        args.selection_repo_root.resolve()
+        if args.selection_repo_root
+        else repo_root
+    )
     run_dir = args.run_dir.resolve()
     materialized_root = (
         args.materialized_root.resolve()
@@ -78,11 +92,12 @@ def main() -> int:
     )
 
     cases = [
-        case for case in inspect(repo_root, run_dir)
+        case for case in inspect(selection_repo_root, run_dir)
         if not case.io_failed and case.speedup > 1.0 and case.weak_stdout_oracle
     ]
     report: dict[str, Any] = {
         "repo_root": str(repo_root),
+        "selection_repo_root": str(selection_repo_root),
         "run_dir": str(run_dir),
         "materialized_root": str(materialized_root),
         "seed": args.seed,
