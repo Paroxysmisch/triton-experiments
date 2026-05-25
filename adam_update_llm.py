@@ -52,10 +52,9 @@ def update_fn_kernel(
 
     block_start = pid * BLOCK_SIZE
     offsets = block_start + tl.arange(0, BLOCK_SIZE)
-
     mask = offsets < n_elements
 
-    # Offset pointers
+    # Offsetted pointers
     offset_p_ptr = p_ptr + offsets
     offset_grad_ptr = grad_ptr + offsets
     offset_exp_avg_ptr = exp_avg_ptr + offsets
@@ -68,25 +67,27 @@ def update_fn_kernel(
     # Step weight decay
     p = p * (1 - lr * wd)
 
-    # Difference between momentum running average and grad
+    # Diff between exp_avg and grad
     diff = exp_avg - grad
 
-    # Weight update
-    update = diff * beta1 + grad
-
-    # Sign calculation
-    can_update = update != 0
-    update_sign = tl.where(update > 0, -lr, lr)
-
-    p = p + update_sign * can_update
-
-    # Decay the momentum running average coefficient
-    exp_avg = diff * beta2 + grad
-
-    # Store new params and momentum running average coefficient
+    # Update p
+    update_p = diff * beta1 + grad
+    p = p + update_p
     tl.store(offset_p_ptr, p, mask=mask)
-    tl.store(offset_exp_avg_ptr, exp_avg, mask=mask)
 
+    # Sign
+    # NOTE: We can't use `torch.sign` because AFAIK it's not supported by triton
+    # So we emulate it with this
+    change = update_p != 0
+    p_positive = p >= 0
+    sign = p_positive ^ change
+    neg_update = tl.where(sign, -update_p, update_p)
+    p = p - neg_update
+    tl.store(offset_p_ptr, p, mask=mask)
+
+    # Decay exp_avg
+    exp_avg = diff * beta2 + grad
+    tl.store(offset_exp_avg_ptr, exp_avg, mask=mask)
 
 def update_fn(
     p: torch.Tensor,

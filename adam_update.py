@@ -55,7 +55,7 @@ def update_fn_kernel(
 
     mask = offsets < n_elements
 
-    # Offset pointers
+    # Offsetted pointers
     offset_p_ptr = p_ptr + offsets
     offset_grad_ptr = grad_ptr + offsets
     offset_exp_avg_ptr = exp_avg_ptr + offsets
@@ -65,16 +65,16 @@ def update_fn_kernel(
     grad = tl.load(offset_grad_ptr, mask=mask)
     exp_avg = tl.load(offset_exp_avg_ptr, mask=mask)
 
-    # Step weight decay
+    # Stepweight decay
     p = p * (1 - lr * wd)
 
-    # Difference between momentum running average and grad
+    # Diff between momentum running average and grad
     diff = exp_avg - grad
 
     # Weight update
     update = diff * beta1 + grad
 
-    # Sign calculation
+    # torch.sign
     can_update = update != 0
     update_sign = tl.where(update > 0, -lr, lr)
 
